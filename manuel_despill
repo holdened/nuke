@@ -1,0 +1,364 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x6f959c01
+ label "Manual Despill"
+ note_font_size 42
+ selected true
+ xpos -302
+ ypos 914
+ bdwidth 1202
+ bdheight 608
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x945b30ff
+ label "Face despill"
+ note_font_size 42
+ selected true
+ xpos -101
+ ypos 1001
+ bdwidth 381
+ bdheight 371
+ z_order 1
+}
+StickyNote {
+ inputs 0
+ name StickyNote2
+ label "These setting are just a baseline.  You still need to do some tweak to fit in your shot."
+ note_font_size 20
+ selected true
+ xpos -235
+ ypos 1453
+}
+push $cut_paste_input
+Roto {
+ output alpha
+ cliptype none
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097152}
+    {t x44866000 x44174000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Bezier2 512 bezier
+     {{cc
+       {f 8192}
+       {px x447b4000
+        {x41500000 0}
+        {x44d3599a x43b9b333}
+        {xc1500000 0}
+        {x3f4cc800 x41700000}
+        {x44ccb1b2 x43ac8485}
+        {xbf4cc800 xc1700000}
+        {xc1333380 x40333380}
+        {x44d57333 x4385cccd}
+        {x41333380 xc0333380}
+        {xc12ccc80 xc0a00000}
+        {x44df199a x43770000}
+        {x412ccc80 x40a00000}
+        {x40400000 xc0933340}
+        {x44df8666 x438be666}
+        {xc0400000 x40933340}
+        {xbf999c00 xbfcccd00}
+        {x44db6fcf x43a1cccd}
+        {x3f999c00 x3fcccd00}
+        {x40e00000 xc08cccc0}
+        {x44de6ccd x43a83333}
+        {xc0e00000 x408cccc0}
+        {x40866600 x3fb33300}
+        {x44d77333 x43b6cccd}
+        {xc0866600 xbfb33300}}}     idem}
+     {tx x447b4000 x44d8b734 x439ea333}
+     {a osw x41200000 osf 0 str 1 spx x44866000 spy x44174000 sb 1 ltn x447b4000 ltm x447b4000 tt x40800000}}
+    {curvegroup Bezier1 512 bezier
+     {{cc
+       {f 8192}
+       {px x447b4000
+        {x42970000 x41880000}
+        {x443fdd89 x4480389d}
+        {xc2970000 xc1880000}
+        {x40e4a400 x41c8d460}
+        {x441f57fe x44694800}
+        {xc1baffc0 xc2a44000}
+        {xc1300000 x41a80000}
+        {x44266000 x44374000}
+        {x41300000 xc1a80000}
+        {xc1b599a0 x41600000}
+        {x443b6000 x44138000}
+        {x40c7e900 xc0769500}
+        {xc0d98086 x40314ce4}
+        {x443e0000 x440babca}
+        {x40d98088 xc0314cde}
+        {xc0d00000 xbf800000}
+        {x4455c000 x4408c000}
+        {x40d00000 1}
+        {xc1980000 xc0900000}
+        {x44698bca x44069943}
+        {x41980000 x40900000}
+        {xc0900000 xc1200000}
+        {x4477ffff x440fe35e}
+        {x40900000 x41200000}
+        {xbf800000 xc0d00000}
+        {x447bfb42 x44211ed0}
+        {1 x40d00000}
+        {xbfc00000 xc0200000}
+        {x447c293b x442cf2a7}
+        {x3fc00000 x40200000}
+        {x40400000 xc0f00000}
+        {x447f1ee1 x4432dbe1}
+        {xc0400000 x40f00000}
+        {x40cbfd00 xc0eeec00}
+        {x447ad4d3 x443a443e}
+        {xbf9cda00 x41108a00}
+        {x3f6109b3 xc0b1058b}
+        {x447863ae x444537f3}
+        {xbf6109aa x40b1058b}
+        {xbf465ad4 xc0aced2e}
+        {x44785519 x444b65a2}
+        {x3f465ab0 x40aced2f}
+        {xbd2f5412 xc08a7c96}
+        {x447a6f29 x445199dd}
+        {x3d2f5478 x408a7c96}
+        {x40adfa80 xc0d1c280}
+        {x4477bda5 x44561052}
+        {xc0853900 x41dec280}
+        {x419bf420 xc1af95a0}
+        {x446c46c5 x44708313}
+        {xc18a86e0 x419bf740}}}     idem}
+     {tx x447b4000 x44612e00 x44379c00}
+     {a osw x41200000 osf 0 str 1 spx x44866000 spy x44174000 sb 1 ltn x447b4000 ltm x447b4000 tt x40800000}}}}}}
+ toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1075 605}
+ colorOverlay {0 0 0 0}
+ lifetime_type "all frames"
+ lifetime_start 1005
+ lifetime_end 1005
+ motionblur_shutter_offset_type centred
+ source_black_outside true
+ name Roto2
+ label "Face / Skin area"
+ selected true
+ xpos 725
+ ypos 1352
+}
+Blur {
+ size 4
+ name Blur7
+ selected true
+ xpos 725
+ ypos 1398
+}
+Input {
+ inputs 0
+ name Input1
+ selected true
+ xpos 540
+ ypos 720
+}
+Dot {
+ name Dot3
+ selected true
+ xpos 568
+ ypos 1081
+}
+set N8d821000 [stack 0]
+Dot {
+ name Dot5
+ selected true
+ xpos 407
+ ypos 1081
+}
+set N8d820c00 [stack 0]
+Dot {
+ name Dot6
+ selected true
+ xpos 117
+ ypos 1081
+}
+set N8d820800 [stack 0]
+HueCorrect {
+ hue {sat {}
+   lum {}
+   red {curve 1 1.038308501 1.016417861 1 1 1 1}
+   green {curve x0.3618911505 0.9616910838 s0 t0.03230791539 x1 0.9860695057 x2 1 1 1 0.9721390114 0.9616910838 s0}
+   blue {curve x0.437535882 0.9288555212 s0 t0.03019707836 x1 0.9475777568 x2 1 1 0.9812777644 0.9475777568 x5.638109207 0.9288555212 s0.03019707836 t0}
+   r_sup {}
+   g_sup {curve x0.5510029197 0.4691543579 s0 x1.175071955 0.9343284369 x2 1 x3 1 0.7810945511 0.5567164421 0.4691543579 s0}
+   b_sup {curve x0.5888255835 0.2611941099 s0 x1.099426985 0.3815921545 x1.893696547 1 x3 1 x4 0.8796020746 0.5238806009 x5.520131111 0.3268657923 x6 0.2611941099 s0}
+   sat_thrsh {}}
+ name HueCorrect1
+ selected true
+ xpos 89
+ ypos 1176
+}
+set N8d820400 [stack 0]
+push $N8d820800
+Dot {
+ name Dot7
+ selected true
+ xpos -63
+ ypos 1081
+}
+Merge2 {
+ inputs 2
+ operation from
+ name Merge8
+ selected true
+ xpos -91
+ ypos 1176
+}
+Saturation {
+ saturation 0
+ name Saturation1
+ selected true
+ xpos -91
+ ypos 1200
+}
+Dot {
+ name Dot8
+ selected true
+ xpos -63
+ ypos 1264
+}
+push $N8d820400
+Merge2 {
+ inputs 2
+ operation plus
+ name Plus1
+ label "plus luminance back in"
+ selected true
+ xpos 89
+ ypos 1262
+}
+Dot {
+ name Dot9
+ selected true
+ xpos 117
+ ypos 1400
+}
+push $N8d821000
+OFXuk.co.thefoundry.keylight.keylight_v201 {
+ show "Final Result"
+ unPreMultiply false
+ screenColour {0.2599132657 0.6130797863 1.489338756}
+ screenGain 1
+ screenBalance 0.95
+ alphaBias {0.5 0.5 0.5}
+ despillBias {0.5 0.5 0.5}
+ gangBiases true
+ preBlur 0
+ "Screen Matte" 0
+ screenClipMin 0
+ screenClipMax 1
+ screenClipRollback 0
+ screenGrowShrink 0
+ screenSoftness 0
+ screenDespotBlack 0
+ screenDespotWhite 0
+ screenReplaceMethod "Soft Colour"
+ screenReplaceColour {0.5 0.5 0.5}
+ Tuning 0
+ midPoint 0.5
+ lowGain 1
+ midGain 1
+ highGain 1
+ "Inside Mask" 0
+ sourceAlphaHandling Ignore
+ insideReplaceMethod "Soft Colour"
+ insideReplaceColour {0.5 0.5 0.5}
+ Crops 0
+ SourceXMethod Colour
+ SourceYMethod Colour
+ SourceEdgeColour 0
+ SourceCropL 0
+ SourceCropR 1
+ SourceCropB 0
+ SourceCropT 1
+ balanceSet false
+ insideComponent None
+ outsideComponent None
+ cacheBreaker true
+ name Keylight2
+ label "Sample your blue screen value"
+ selected true
+ xpos 540
+ ypos 1153
+}
+set N3e120800 [stack 0]
+push $N8d820c00
+Merge2 {
+ inputs 2
+ operation from
+ name Merge9
+ selected true
+ xpos 379
+ ypos 1159
+}
+Saturation {
+ saturation 0
+ name Saturation4
+ selected true
+ xpos 379
+ ypos 1183
+}
+Dot {
+ name Dot10
+ selected true
+ xpos 407
+ ypos 1259
+}
+push $N3e120800
+Merge2 {
+ inputs 2
+ operation plus
+ name Plus
+ label "plus luminance back in"
+ selected true
+ xpos 540
+ ypos 1256
+}
+Keymix {
+ inputs 3
+ name Keymix1
+ selected true
+ xpos 540
+ ypos 1398
+}
+Output {
+ name Output1
+ selected true
+ xpos 540
+ ypos 1702
+}
+StickyNote {
+ inputs 0
+ name StickyNote1
+ label "pipe this in after your original plate (with grain) and neutral grade"
+ selected true
+ xpos 652
+ ypos 718
+}
