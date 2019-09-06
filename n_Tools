@@ -1,0 +1,745 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+add_layer {P P.red P.green P.blue P.alpha P.x P.y P.z}
+Group {
+ name N_Noise3D
+ help "Generates a 3D noise pattern on a given position pass.\nSupports fBm (Fractional Brownian Noise) and Turbulent Noise algorithms."
+ selected true
+ xpos 400
+ ypos 1599
+ addUserKnob {20 N_Noise3D}
+ addUserKnob {41 in l "position layer" t "Select layer containing position info." T Shuffle1.in}
+ addUserKnob {41 channel0 l "output channels" T Expression3.channel0}
+ addUserKnob {26 ""}
+ addUserKnob {4 noisetype M {fBm turbulent}}
+ addUserKnob {13 size}
+ size {10 10 10}
+ addUserKnob {13 offset}
+ addUserKnob {26 ""}
+ addUserKnob {3 octaves}
+ octaves 3
+ addUserKnob {7 lacunarity R 0 5}
+ lacunarity 2
+ addUserKnob {7 gain}
+ gain 0.5
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 389
+  ypos -308
+ }
+ Shuffle {
+  in P
+  name Shuffle1
+  xpos 389
+  ypos -230
+ }
+ Expression {
+  temp_name0 fBmNoise
+  temp_expr0 fBm((r+offset.x)*1/size.x,(g+offset.y)*1/size.y,(b+offset.z)*1/size.z,octaves,lacunarity,gain)*.5+0.5
+  temp_name1 turbNoise
+  temp_expr1 turbulence((r+offset.x)*1/size.x,(g+offset.y)*1/size.y,(b+offset.z)*1/size.z,octaves,lacunarity,gain)
+  channel0 rgba
+  expr0 noisetype==0?fBmNoise:noisetype==1?turbNoise:0
+  name Expression3
+  selected true
+  xpos 389
+  ypos -172
+ }
+ Output {
+  name Output1
+  xpos 389
+  ypos -44
+ }
+end_group
+push $cut_paste_input
+Group {
+ name N_Sticker_v2v
+ selected true
+ xpos 510
+ ypos 1593
+ addUserKnob {20 User l Main}
+ addUserKnob {12 center l "sticker center"}
+ center {484.5 666}
+ addUserKnob {22 sample l "stick it!!!" -STARTLINE T "def nStickerInit(myNode):\n\n    '''\n    This function initializes N_Sticker so that it can project an image sequence\n    on an animated CG character render if we have it's position AOV\n    in object space (reference position).\n\n    It builds the transformation matrix necessary to align an orthographic camera\n    perpendicular to a rendered surface point of which we sample position and normal.\n\n    The tool itself needs only the pObject pass as the normals are derived internally\n    by means of a specific setup, but can (and should, for more accuracy) be fed with a rendered \n    normal pass in object space.\n\n    (c) Gianfranco Sgura 2013\n    '''\n    \n    # get N_Sticker's X and Y sampling coordinates.\n    \n    oNSticker = nuke.toNode(myNode)\n    \n    myX = oNSticker\['center'].value(0) + 0.5\n    myY = oNSticker\['center'].value(1) + 0.5\n\n    # the 'with' statement let us get in the node \n    # and touch our two inputs (\"POSITION\" and \"NORMALS\") and our target (\"Axis\").\n    with oNSticker:\n        oNormal = nuke.toNode(\"NORMALS\")\n        oPosition = nuke.toNode(\"POSITION\")\n        oTarget = nuke.toNode(\"Axis\")\n        \n    # sample position and normal.\n    posR = oPosition.sample('r', myX,myY)\n    posG = oPosition.sample('g', myX,myY)\n    posB = oPosition.sample('b', myX,myY) \n\n    normR = oNormal.sample('r', myX,myY)\n    normG = oNormal.sample('g', myX,myY)\n    normB = oNormal.sample('b', myX,myY) \n    \n    ''' \n    Let's build the vectors to represent the rotation \n    components of our transformation matrix.\n    '''\n    # we already have the normal : this will be our Z axis component.\n    vZ = nuke.math.Vector3()\n    vZ.set(normR, normG, normB)\n    vZ.normalize()  # this might be weird as a normal should be long 1 by default, but you never know.\n    \n    # create an upVector (0,1,0)\n    vUp = nuke.math.Vector3(0,1,0)\n        \n    # cross the vZ with the vUp and you get vX, the X axis.\n    vX = nuke.math.Vector3()\n    vX = vZ.cross( vUp )\n    vX.normalize()\n\n    # cross vX with the vZ and get the vY, our Y axis.\n    vY = nuke.math.Vector3()\n    vY = vX.cross( vZ )\n\n    ''' \n    So now we have a position and 3 orthonormal axis that represent a rotation.\n    Let's pack the values and fill our target's matrix.\n    Et voila': the axis in the tool is positioned on the surface \n    with it's Z axis pointing along the normal.\n    '''\n    stickyMatrix = \[vX\[0], vY\[0], vZ\[0], posR, vX\[1], vY\[1], vZ\[1], posG, vX\[2], vY\[2], vZ\[2], posB, 0, 0, 0, 1]\n\n    for i in range(16):\n        oTarget\['matrix'].setValue(stickyMatrix\[i],i)\n\n\n    # now let's just make sure our axis target will use the matrix, just in case.\n    oTarget\['useMatrix'].setValue('true')\n\n\n\nnStickerInit(nuke.thisNode().name())"}
+ addUserKnob {26 ""}
+ addUserKnob {7 near R -10 10}
+ near -1
+ addUserKnob {7 far R -10 10}
+ far 1000
+ addUserKnob {26 ""}
+ addUserKnob {4 output l "output mode" M {render position normals}}
+ addUserKnob {26 ""}
+ addUserKnob {26 sign l "" +STARTLINE T "(c) Gianfranco Sgura 2013"}
+ addUserKnob {20 tweaks l Tweaks}
+ addUserKnob {14 scale R 0 100}
+ scale 0.4
+ addUserKnob {7 rotation l "rotate Z" R -180 180}
+ addUserKnob {7 pivotX l "rotate X" R -90 90}
+ pivotX -16.5
+ addUserKnob {7 pivotY l "rotate Y" R -90 90}
+ pivotY -3.5
+ addUserKnob {7 offset_x l "offset X" R -1 1}
+ addUserKnob {7 offset_y l "offset Y" R -1 1}
+ offset_y -0.065
+ addUserKnob {22 reset T "targ=nuke.thisNode()\n\ntarg.knob(\"scale\").setValue(1)\ntarg.knob(\"rotation\").setValue(0)\ntarg.knob(\"pivotX\").setValue(0)\ntarg.knob(\"pivotY\").setValue(0)\ntarg.knob(\"offset_x\").setValue(0)\ntarg.knob(\"offset_y\").setValue(0)" +STARTLINE}
+ addUserKnob {20 info l Info}
+ addUserKnob {26 intotxt l "" +STARTLINE T "Projects and sticks an image onto a moving or static surface using the reference position pass (pObj).\n\nThe projection is orthographic and happens along the normal at the chosen surface point.\n--------------------------------------------------------------------------------------------------------------------------------------------------\n\nUsage:\n- feed me with a REFERENCE POSITION PASS, \n  the IMAGE to PROJECT and \n  the PRIMARY ALPHA of your object.\n- position \"center\" where you want the center of your sticker to be.\n- hit \"stick it!!!\"\n- tweak at your leisure...guess in which tab?\n- enjoy your sticker :D\n\n--------------------------------------------------------------------------------------------------------------------------------------------------\n\nI'm debugging and improving this (a camera projection version for moving objects is on it's way). \nPlease feel free to mail me in you need any help or have any suggestions.\n\n-gianfranco-s@moving-picture.com\n-gianfranco.sgura@gmail.com"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x7171c600
+  label Projection
+  note_font_size 42
+  xpos -451
+  ypos -5
+  bdwidth 303
+  bdheight 509
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x7171c600
+  label "Normals from position"
+  note_font_size 42
+  xpos 58
+  ypos -33
+  bdwidth 484
+  bdheight 566
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x7171c600
+  label "out to the sampler function"
+  note_font_size 25
+  xpos 59
+  ypos 634
+  bdwidth 481
+  bdheight 171
+ }
+ Axis2 {
+  inputs 0
+  rotate {0 -1.998000026 95.57099915}
+  useMatrix true
+  matrix {
+      {-0.9980525374 -0.02258419804 0.05814640969 0.01910400391}
+      {0 0.9321578145 0.3620522618 1.350585938}
+      {0.06237828359 -0.3613471687 0.930342555 0.09661865234}
+      {0 0 0 1}
+    }
+  name Axis
+  xpos -1230
+  ypos 120
+ }
+ Axis2 {
+  rotate {{parent.pivotY} {parent.pivotX} {-parent.rotation}}
+  name Pivot
+  xpos -1230
+  ypos 220
+ }
+ Axis2 {
+  translate {{-offset_x i} {offset_y i} 10000}
+  name Axis1
+  xpos -1230
+  ypos 320
+ }
+ Input {
+  inputs 0
+  name RefPos
+  xpos -90
+  ypos -110
+ }
+ NoOp {
+  name NoOp1
+  xpos -90
+  ypos 40
+ }
+ Dot {
+  name Dot2
+  xpos -56
+  ypos 94
+ }
+set N7e326c00 [stack 0]
+ Dot {
+  name Dot11
+  xpos 194
+  ypos 94
+ }
+set N7e326800 [stack 0]
+ Dot {
+  name Dot12
+  xpos 194
+  ypos 294
+ }
+set N7e326400 [stack 0]
+push $N7e326800
+ Dot {
+  name Dot10
+  xpos 294
+  ypos 94
+ }
+set N7e326000 [stack 0]
+ Transform {
+  translate {-1 0}
+  center {1024 778}
+  name Pixel_at_Right
+  xpos 260
+  ypos 240
+ }
+ MergeExpression {
+  inputs 2
+  temp_name0 x
+  temp_expr0 Br-Ar
+  temp_name1 y
+  temp_expr1 Bg-Ag
+  temp_name2 z
+  temp_expr2 Bb-Ab
+  temp_name3 Len
+  temp_expr3 "sqrt((x*x) + (y*y) + (z*z))"
+  expr0 x/Len
+  expr1 y/Len
+  expr2 z/Len
+  name Base_Vector_X
+  xpos 260
+  ypos 340
+ }
+push $N7e326400
+ Dot {
+  name Dot13
+  xpos 344
+  ypos 294
+ }
+push $N7e326000
+ Dot {
+  name Dot9
+  xpos 444
+  ypos 94
+ }
+ Transform {
+  translate {0 -1}
+  center {1024 778}
+  name Pixel_Above
+  xpos 410
+  ypos 242
+ }
+ MergeExpression {
+  inputs 2
+  temp_name0 x
+  temp_expr0 Br-Ar
+  temp_name1 y
+  temp_expr1 Bg-Ag
+  temp_name2 z
+  temp_expr2 Bb-Ab
+  temp_name3 Len
+  temp_expr3 "sqrt((x*x) + (y*y) + (z*z))"
+  expr0 x/Len
+  expr1 y/Len
+  expr2 z/Len
+  name Base_Vector_Y
+  xpos 410
+  ypos 340
+ }
+ MergeExpression {
+  inputs 2
+  temp_name0 x
+  temp_expr0 "Ag*Bb - Ab*Bg"
+  temp_name1 y
+  temp_expr1 "Ab*Br - Ar*Bb"
+  temp_name2 z
+  temp_expr2 "Ar*Bg - Ag*Br"
+  expr0 x
+  expr1 y
+  expr2 z
+  name Normals_Solver
+  label Cross_X_Y
+  xpos 410
+  ypos 384
+ }
+ Expression {
+  expr0 isnan?0:r
+  expr1 isnan?0:g
+  expr2 isnan?0:b
+  name Fix_NANs
+  xpos 410
+  ypos 490
+ }
+ NoOp {
+  name NORMALS
+  xpos 410
+  ypos 740
+ }
+ Dot {
+  name Dot7
+  xpos 444
+  ypos 894
+ }
+push $N7e326400
+ NoOp {
+  name POSITION
+  xpos 160
+  ypos 740
+ }
+ Dot {
+  name Dot6
+  xpos 194
+  ypos 844
+ }
+ Dot {
+  name Dot5
+  xpos -606
+  ypos 844
+ }
+ Input {
+  inputs 0
+  name Alpha
+  xpos -1065
+  ypos -110
+  number 2
+ }
+ Dot {
+  name Dot4
+  xpos -1031
+  ypos 644
+ }
+push $N7e326c00
+ Dot {
+  name Dot1
+  xpos -306
+  ypos 94
+ }
+ Expression {
+  temp_name0 dx
+  temp_expr0 "(r - Axis1.world_matrix.3)"
+  temp_name1 dy
+  temp_expr1 "(g - Axis1.world_matrix.7)"
+  temp_name2 dz
+  temp_expr2 "(b - Axis1.world_matrix.11)"
+  expr0 "r != 0? dx : 0"
+  expr1 "g != 0? dy : 0"
+  expr2 "b != 0? dz : 0"
+  name Camera_Transform_Distance
+  xpos -340
+  ypos 190
+ }
+ Expression {
+  temp_name0 x
+  temp_expr0 "Axis1.world_matrix.0 * r + Axis1.world_matrix.4 * g + Axis1.world_matrix.8 * b"
+  temp_name1 y
+  temp_expr1 "Axis1.world_matrix.1 * r + Axis1.world_matrix.5 * g + Axis1.world_matrix.9 * b"
+  temp_name2 z
+  temp_expr2 "Axis1.world_matrix.2 * r + Axis1.world_matrix.6 * g + Axis1.world_matrix.10 * b"
+  expr0 x
+  expr1 y
+  expr2 z
+  name Camera_Transform_Rotation
+  xpos -340
+  ypos 240
+ }
+ Expression {
+  temp_name0 myNear
+  temp_expr0 "-far - Axis1.translate.z"
+  temp_name1 myFar
+  temp_expr1 "-near - Axis1.translate.z"
+  expr0 "b<myNear || b > myFar ? 0 : r"
+  expr1 "b<myNear || b > myFar ? 0 : g"
+  name Clipping_Planes
+  xpos -340
+  ypos 290
+ }
+ Expression {
+  temp_name0 clamp
+  temp_expr0 "r == 0 && g == 0 ? 0 : 1"
+  temp_name1 myRatio
+  temp_expr1 Aspect.Ratio
+  temp_name2 u
+  temp_expr2 "clamp == 1? r/(scale.w * myRatio )+0.5 : 0"
+  temp_name3 v
+  temp_expr3 "clamp == 1? g/(scale.h )+0.5 : 0"
+  expr0 "u>0 && u<1 && v>0  && v<1? 1 - u : 0"
+  expr1 "v>0  && v<1 && u>0 && u<1? v : 0"
+  channel3 none
+  name Orthographic_Solver
+  xpos -340
+  ypos 340
+ }
+ Dot {
+  name Dot3
+  xpos -306
+  ypos 544
+ }
+ Input {
+  inputs 0
+  name IMG
+  selected true
+  xpos -690
+  ypos -110
+  number 1
+ }
+ NoOp {
+  name Aspect
+  xpos -690
+  ypos 340
+  addUserKnob {20 User}
+  addUserKnob {3 mywidth l width}
+  mywidth {{width i}}
+  addUserKnob {3 myheight l height}
+  myheight {{height i}}
+  addUserKnob {7 Ratio}
+  Ratio {{"Aspect.mywidth / Aspect.myheight" i}}
+ }
+ Crop {
+  box {1 1 2047 1555}
+  name Crop
+  xpos -690
+  ypos 490
+ }
+ STMap {
+  inputs 2
+  channels rgba
+  uv rgb
+  name STMap1
+  xpos -690
+  ypos 540
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge1
+  xpos -690
+  ypos 640
+ }
+ Switch {
+  inputs 3
+  which {{parent.output i}}
+  name Switch1
+  xpos -690
+  ypos 890
+ }
+ Output {
+  name Output1
+  xpos -689
+  ypos 970
+ }
+end_group
+push $cut_paste_input
+Group {
+ name N_Depth_Bubble1
+ help "Version of Depth Bubble with an inner radius setting.  Leaving this at 0 will give the same result as before.  Values up to the radius value will allow an inner radius to be set.\n\nThere's also a dropdown list for fallof method - linear, smoothstep or cubic.\n\nv3 update - You can now scale the bubble in x, y and z world space.\n\n - Steve Newbold 2011 \n\nRotation and Stackable functuionality  added, Visualize in 3D\nif this is first in the stack, opperation should be set to IN\n\n- Daniel Velikov 2016"
+ selected true
+ xpos 620
+ ypos 1599
+ addUserKnob {20 User l N_Depth_Bubble}
+ addUserKnob {41 in l "input channel" T Shuffle_Input_Channels.in}
+ addUserKnob {26 ""}
+ addUserKnob {41 pos_center T Depth_Bubble.pos_center}
+ addUserKnob {41 radius T Depth_Bubble.radius}
+ addUserKnob {7 inner_radius l "inner radius" R 0 100}
+ addUserKnob {4 falloff l "Alpha falloff" M {linear smoothstep cubic ""}}
+ addUserKnob {41 operation l "Alpha mode" T ChannelMerge1.operation}
+ addUserKnob {20 vis l Visualize n 1}
+ addUserKnob {6 in3D l "Show in 3D" +STARTLINE}
+ addUserKnob {41 detail l "Point detail" T PositionToPoints1.detail}
+ addUserKnob {41 pointSize l "Point size" T PositionToPoints1.pointSize}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 scl l Scale n 1}
+ addUserKnob {41 xscale T Depth_Bubble.xscale}
+ addUserKnob {41 yscale T Depth_Bubble.yscale}
+ addUserKnob {41 zscale T Depth_Bubble.zscale}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {20 rot l Rotation n 1}
+ addUserKnob {7 rotateX l "rotate X" t "Rotates the matte around the X axis based on the position of the max point" R -180 180}
+ addUserKnob {7 rotateY l "rotate Y" t "Rotates the matte around the Y axis based on the position of the max point" R -180 180}
+ addUserKnob {7 rotateZ l "rotate Z" t "Rotates the matte around the Z axis based on the position of the max point" R -180 180}
+ addUserKnob {20 endGroup_2 l endGroup n -1}
+ addUserKnob {20 ofs l Offstes n 1}
+ addUserKnob {41 offset T Depth_Bubble.offset}
+ addUserKnob {41 round T Depth_Bubble.round}
+ addUserKnob {41 about T Depth_Bubble.about}
+ addUserKnob {20 endGroup_3 l endGroup n -1}
+}
+ Input {
+  inputs 0
+  name position_img
+  xpos -469
+  ypos -685
+ }
+set N9dcaec00 [stack 0]
+ Shuffle {
+  in P
+  alpha black
+  name Shuffle_Input_Channels
+  xpos -469
+  ypos -635
+ }
+set N9dcae800 [stack 0]
+ Add {
+  value {{-(pos_center.r)} {-(pos_center.g)} {-(pos_center.b)} 0}
+  name Add1
+  xpos -469
+  ypos -596
+  disable {{rotateX+rotateY+rotateZ==0.0}}
+ }
+ ColorMatrix {
+  matrix {
+      {1 0 0}
+      {0 {cos(radians(angle))} {-sin(radians(angle))}}
+      {0 {sin(radians(angle))} {cos(radians(angle))}}
+    }
+  name X
+  xpos -469
+  ypos -552
+  disable {{N_Depth_Bubble1.Add1.disable}}
+  addUserKnob {20 User}
+  addUserKnob {7 angle R 0 360}
+  angle {{parent.rotateX}}
+ }
+ ColorMatrix {
+  matrix {
+      {{cos(radians(angle))} 0 {sin(radians(angle))}}
+      {0 1 0}
+      {{-sin(radians(angle))} 0 {cos(radians(angle)) x1001 1}}
+    }
+  name Y
+  xpos -469
+  ypos -524
+  disable {{N_Depth_Bubble1.Add1.disable}}
+  addUserKnob {20 User}
+  addUserKnob {7 angle R 0 360}
+  angle {{parent.rotateY}}
+ }
+ ColorMatrix {
+  matrix {
+      {{cos(radians(angle))} {-sin(radians(angle))} 1.224646799e-16}
+      {{sin(radians(angle))} {cos(radians(angle))} 0}
+      {0 0 1}
+    }
+  name Z
+  xpos -469
+  ypos -496
+  disable {{N_Depth_Bubble1.Add1.disable}}
+  addUserKnob {20 User}
+  addUserKnob {7 angle R 0 360}
+  angle {{parent.rotateZ}}
+ }
+ Add {
+  value {{(pos_center.r)} {(pos_center.g)} {(pos_center.b)} 0}
+  name Add3
+  xpos -469
+  ypos -460
+  disable {{N_Depth_Bubble1.Add1.disable}}
+ }
+ Expression {
+  temp_name0 x
+  temp_expr0 (pos_center.r-r)+((offset*cos(radians(about)))*cos(radians(round)))
+  temp_name1 y
+  temp_expr1 (pos_center.g-g)+(offset*sin(radians(about)))
+  temp_name2 z
+  temp_expr2 (pos_center.b-b)+((offset*cos(radians(about)))*sin(radians(round)))
+  expr3 "r == 0 && g == 0 && b == 0?0:(xscale != 1 || yscale != 1 || zscale != 1?1-(sqrt(pow2(x)/pow2(xscale)+pow2(y)/pow2(yscale)+pow2(z)/pow2(zscale))/radius):1-(sqrt(pow2(x)+pow2(y)+pow2(z))/radius))"
+  name Depth_Bubble
+  xpos -469
+  ypos -298
+  addUserKnob {20 User}
+  addUserKnob {7 xscale}
+  xscale 1
+  addUserKnob {7 yscale}
+  yscale 1
+  addUserKnob {7 zscale}
+  zscale 1
+  addUserKnob {18 pos_center}
+  pos_center {0 0 0}
+  addUserKnob {6 pos_center_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 pos_center_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 radius R 0 100}
+  radius 10
+  addUserKnob {7 offset R -100 100}
+  addUserKnob {7 round R -180 180}
+  addUserKnob {7 about R -180 180}
+ }
+ Grade {
+  channels alpha
+  whitepoint {{"1-(min(parent.inner_radius, parent.radius)*(1/parent.radius))"}}
+  white_clamp true
+  name Inner_Radius
+  xpos -469
+  ypos -264
+ }
+ Dot {
+  name Dot7
+  xpos -435
+  ypos -117
+ }
+set N8d60a800 [stack 0]
+ Expression {
+  expr3 "clamp(ow(a, 2))"
+  name Cubic
+  xpos -371
+  ypos -121
+ }
+push $N8d60a800
+ Expression {
+  expr3 "clamp(smoothstep(0, 1, a))"
+  name Smoothstep
+  xpos -550
+  ypos -121
+ }
+push $N8d60a800
+ Switch {
+  inputs 3
+  which {{parent.falloff}}
+  name Switch1
+  xpos -469
+  ypos -79
+ }
+set N40c45c00 [stack 0]
+ Dot {
+  name Dot6
+  xpos -774
+  ypos -75
+ }
+ Expression {
+  channel0 {rgba.red -rgba.green -rgba.blue none}
+  expr0 a
+  channel1 {-rgba.red rgba.green rgba.blue none}
+  expr1 0
+  channel2 {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  expr2 1
+  channel3 none
+  name Expression1
+  xpos -808
+  ypos -2
+ }
+push $N9dcae800
+ Dot {
+  name Dot3
+  xpos -579
+  ypos -631
+ }
+ Dot {
+  name Dot4
+  xpos -574
+  ypos 73
+ }
+ PositionToPoints {
+  inputs 2
+  display textured
+  selectable false
+  render_mode off
+  cast_shadow false
+  receive_shadow false
+  detail 0.025
+  name PositionToPoints1
+  xpos -808
+  ypos 69
+  disable {{!in3D x1 1}}
+ }
+set N40c44800 [stack 0]
+ Dot {
+  name Dot5
+  xpos -774
+  ypos 228
+ }
+push $N9dcaec00
+ Dot {
+  name Dot1
+  xpos -58
+  ypos -675
+ }
+ Dot {
+  name Dot2
+  xpos -58
+  ypos 40
+ }
+push $N40c45c00
+ ChannelMerge {
+  inputs 2
+  operation in
+  name ChannelMerge1
+  xpos -469
+  ypos 24
+ }
+ Switch {
+  inputs 2
+  which {{in3D}}
+  name Switch3
+  xpos -469
+  ypos 224
+ }
+ Output {
+  name Output1
+  xpos -469
+  ypos 342
+ }
+push $N40c44800
+ Viewer {
+  center_fstop -1
+  input_process false
+  name Viewer1
+  xpos -698
+  ypos 4
+ }
+end_group
+push $cut_paste_input
+Group {
+ name N_Depth_Cube
+ selected true
+ xpos 730
+ ypos 1599
+ addUserKnob {20 N_Depth_Cube}
+ addUserKnob {41 in l InputChannel T Shuffle_Input_Channels.in}
+ addUserKnob {26 ""}
+ addUserKnob {41 center T Depth_Cube.center}
+ addUserKnob {41 rotation T Depth_Cube.rotation}
+ addUserKnob {41 scale T Depth_Cube.scale}
+}
+ Input {
+  inputs 0
+  name position_img
+  xpos 162
+  ypos 169
+ }
+ Shuffle {
+  in P
+  name Shuffle_Input_Channels
+  xpos 162
+  ypos 229
+ }
+ Expression {
+  temp_name0 prodX
+  temp_expr0 abs(normX.x*(center.r-r)+normX.y*(center.g-g)+normX.z*(center.b-b))
+  temp_name1 prodY
+  temp_expr1 abs(normY.x*(center.r-r)+normY.y*(center.g-g)+normY.z*(center.b-b))
+  temp_name2 prodZ
+  temp_expr2 abs(normZ.x*(center.r-r)+normZ.y*(center.g-g)+normZ.z*(center.b-b))
+  expr3 1-max(prodX/scale.x*2,prodY/scale.y*2,prodZ/scale.z*2)/2
+  name Depth_Cube
+  xpos 162
+  ypos 297
+  addUserKnob {20 User}
+  addUserKnob {18 center}
+  center {0 0 0}
+  addUserKnob {6 center_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 center_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {13 rotation}
+  addUserKnob {13 scale}
+  scale {10 10 10}
+  addUserKnob {26 ""}
+  addUserKnob {13 rad}
+  rad {{radians(rotation.x)} {radians(rotation.y)} {radians(rotation.z)}}
+  addUserKnob {13 normX}
+  normX {{cos(rad.z)*(cos(rad.y))} {sin(rad.z)*(cos(rad.y))} {-sin(rad.y)}}
+  addUserKnob {13 normY}
+  normY {{cos(rad.z)*(sin(rad.y)*(-sin(rad.x)))-sin(rad.z)*(cos(rad.x))} {sin(rad.z)*(sin(rad.y)*(-sin(rad.x)))+cos(rad.z)*(cos(rad.x))} {(cos(rad.y)*(-sin(rad.x)))}}
+  addUserKnob {13 normZ}
+  normZ {{cos(rad.z)*(sin(rad.y)*cos(rad.x))-sin(rad.z)*sin(rad.x)} {sin(rad.z)*(sin(rad.y)*cos(rad.x))+cos(rad.z)*sin(rad.x)} {cos(rad.y)*cos(rad.x)}}
+ }
+ Output {
+  name Output1
+  xpos 162
+  ypos 397
+ }
+end_group
