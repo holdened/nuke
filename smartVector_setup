@@ -1,0 +1,229 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+PostageStamp {
+ inputs 0
+ name smartVector_pass
+ selected true
+ xpos 757
+ ypos 568
+ postage_stamp true
+}
+Dot {
+ name Dot3
+ selected true
+ xpos 785
+ ypos 685
+}
+set N2c831c00 [stack 0]
+Dot {
+ name Dot5
+ selected true
+ xpos 347
+ ypos 685
+}
+VectorToMotion {
+ name VectorToMotion1
+ selected true
+ xpos 319
+ ypos 1034
+ scale {{"proxy ? proxy_scale.0 : 1"} {"proxy ? proxy_scale.1 : 1"}}
+}
+NoOp {
+ inputs 0
+ name source_of_Vectors
+ selected true
+ xpos 964
+ ypos 791
+}
+FrameHold {
+ first_frame 1001
+ name FrameHold3
+ selected true
+ xpos 964
+ ypos 815
+}
+set N21857200 [stack 0]
+push $N2c831c00
+VectorDistort {
+ inputs 2
+ referenceFrame 69
+ reference_frame_set true
+ outputMode st-map
+ name VectorDistort3
+ selected true
+ xpos 757
+ ypos 820
+}
+Blur {
+ channels rgba
+ name Blur7
+ selected true
+ xpos 757
+ ypos 871
+}
+push $N21857200
+STMap {
+ inputs 2
+ channels rgba
+ uv rgb
+ name STMap2
+ selected true
+ xpos 757
+ ypos 934
+}
+Write {
+ in_colorspace linear
+ out_colorspace linear
+ name Write1
+ selected true
+ xpos 757
+ ypos 968
+}
+push $cut_paste_input
+PostageStamp {
+ name plate
+ selected true
+ xpos 461
+ ypos 571
+ postage_stamp true
+}
+Merge2 {
+ inputs 2
+ name Merge8
+ selected true
+ xpos 461
+ ypos 968
+}
+Copy {
+ inputs 2
+ from0 forward.u
+ to0 forward.u
+ from1 forward.v
+ to1 forward.v
+ name Copy4
+ selected true
+ xpos 461
+ ypos 1023
+}
+VectorBlur2 {
+ channels rgba
+ uv forward
+ scale 1
+ name VectorBlur2_1
+ selected true
+ xpos 461
+ ypos 1069
+}
+NoOp {
+ inputs 0
+ name source_of_Vectors1
+ selected true
+ xpos 1029
+ ypos 1527
+}
+FrameHold {
+ first_frame 1001
+ name FrameHold4
+ selected true
+ xpos 1029
+ ypos 1551
+}
+set N21856900 [stack 0]
+PostageStamp {
+ inputs 0
+ name smartVector_pass1
+ selected true
+ xpos 766
+ ypos 1304
+ postage_stamp true
+}
+Dot {
+ name Dot6
+ selected true
+ xpos 794
+ ypos 1421
+}
+set Ndf932000 [stack 0]
+VectorDistort {
+ inputs 2
+ referenceFrame 69
+ reference_frame_set true
+ name VectorDistort4
+ selected true
+ xpos 766
+ ypos 1556
+}
+set Ndab4fc00 [stack 0]
+Blur {
+ channels rgba
+ name Blur8
+ selected true
+ xpos 766
+ ypos 1600
+}
+push $N21856900
+STMap {
+ inputs 2
+ name STMap3
+ selected true
+ xpos 766
+ ypos 1670
+}
+Write {
+ in_colorspace linear
+ out_colorspace linear
+ name Write2
+ selected true
+ xpos 766
+ ypos 1704
+}
+push $Ndf932000
+Dot {
+ name Dot7
+ selected true
+ xpos 356
+ ypos 1421
+}
+VectorToMotion {
+ name VectorToMotion2
+ selected true
+ xpos 328
+ ypos 1667
+ scale {{"proxy ? proxy_scale.0 : 1"} {"proxy ? proxy_scale.1 : 1"}}
+}
+push $Ndab4fc00
+PostageStamp {
+ inputs 0
+ name plate1
+ selected true
+ xpos 470
+ ypos 1295
+ postage_stamp true
+}
+Merge2 {
+ inputs 2
+ name Merge9
+ selected true
+ xpos 470
+ ypos 1556
+}
+Copy {
+ inputs 2
+ from0 forward.u
+ to0 forward.u
+ from1 forward.v
+ to1 forward.v
+ name Copy5
+ selected true
+ xpos 470
+ ypos 1656
+}
+VectorBlur2 {
+ channels rgba
+ uv forward
+ scale 1
+ name VectorBlur2_2
+ selected true
+ xpos 470
+ ypos 1702
+}
