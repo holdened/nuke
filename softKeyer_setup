@@ -1,0 +1,1645 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+BackdropNode {
+ inputs 0
+ name BackdropNode28
+ tile_color 0x994cff
+ label "Flat Key Setup:\n\nHelpful in removing unwanted minor inconsistencies                 \nin a blue/green screen plate, in combination with an additive\nkeyer, like the Soft Keyer.\n\nSwitch from Original Plate viewer to IBK Colour Setup,\nuse the IBK Colour setup as you would to pull an IBK key.\nThe Patch back level pull down is used instead of a slider to\nretain edge detail. In step 2, select the desired target\ncolour with the picker tool. Switch the output view to result\nand if needed adjust the overall mix back in step 3 as needed.\n \n"
+ note_font_size 30
+ selected true
+ xpos 1497
+ ypos 136
+ bdwidth 939
+ bdheight 441
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode29
+ tile_color 0x994cff
+ label "Soft Keyer:\n\nAn additive keyer that retains as much of the subtle detail from\nthe blue/green screen plate as possible. Treat it as a layer between the\nbackground and the foreground premultiplied plate. Best results if used in\ncombination with the Flat Key Setup tool and as flat and clean a blue/green\nscreen plate as possible. "
+ note_font_size 30
+ selected true
+ xpos 1479
+ ypos 639
+ bdwidth 1101
+ bdheight 280
+}
+NoOp {
+ inputs 0
+ name plate
+ selected true
+ xpos 1370
+ ypos 372
+}
+Group {
+ name Flat_Key_Setup1
+ tile_color 0x7f7f7fff
+ note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+ note_font_size 15
+ selected true
+ xpos 1370
+ ypos 417
+ addUserKnob {20 User}
+ addUserKnob {4 ViewerSelect l "Output View" M {"Original Plate" "IBK Colour Setup" Result "" ""}}
+ addUserKnob {26 ""}
+ addUserKnob {26 IBKSetup l "1) IBK Colour Setup" t "Use this to set up your IBk Colour as you would normally for a key." T ""}
+ addUserKnob {41 ScreenType l "Screen Type" T ColourControl.ScreenType}
+ addUserKnob {41 darks T ColourControl.darks}
+ addUserKnob {41 lights T ColourControl.lights}
+ addUserKnob {41 ErodeLevel l erode T ColourControl.ErodeLevel}
+ addUserKnob {41 DilateSelect l "Patch Back Level" T ColourControl.DilateSelect}
+ addUserKnob {26 Emptyspace1 l "" +STARTLINE}
+ addUserKnob {26 ConstantSetup l "2) Target Colour" t "This is the colour you want to push your uneven key areas towards."}
+ addUserKnob {41 TargetColour l Target T ColourControl.TargetColour}
+ addUserKnob {26 EmptySpace2 l "" +STARTLINE}
+ addUserKnob {26 OverallMix l "3) Overall Mix" t "Adjust your mix as needed to maintain plate detail."}
+ addUserKnob {41 mix T Merge29.mix}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 11167
+  ypos -1096
+ }
+ Dot {
+  name Dot3
+  xpos 11201
+  ypos -897
+ }
+set N27ffb400 [stack 0]
+ Dot {
+  name Dot17
+  xpos 11201
+  ypos -392
+ }
+set N27ffb000 [stack 0]
+ Dot {
+  name Dot6
+  xpos 11201
+  ypos -222
+ }
+set N27ffac00 [stack 0]
+ Shuffle {
+  green red
+  blue red
+  name Shuffle18
+  xpos 11167
+  ypos -175
+ }
+push $N27ffac00
+ Dot {
+  name Dot8
+  xpos 11307
+  ypos -222
+ }
+ Shuffle {
+  red blue
+  green blue
+  name Shuffle27
+  xpos 11273
+  ypos -177
+ }
+set N27ffa000 [stack 0]
+push $N27ffac00
+ Dot {
+  name Dot7
+  xpos 11097
+  ypos -222
+ }
+ Shuffle {
+  red green
+  blue green
+  name Shuffle19
+  xpos 11063
+  ypos -176
+ }
+set N28249800 [stack 0]
+ Switch {
+  inputs 2
+  which {{parent.ColourControl.ScreenType}}
+  name Switch6
+  tile_color 0xffffffff
+  xpos 11273
+  ypos -71
+ }
+ Merge2 {
+  inputs 2
+  operation max
+  name Max20
+  xpos 11167
+  ypos -23
+ }
+push $N28249800
+push $N27ffa000
+ Switch {
+  inputs 2
+  which {{parent.ColourControl.ScreenType}}
+  name Switch7
+  tile_color 0xffffffff
+  xpos 11063
+  ypos -78
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge13
+  xpos 11063
+  ypos -23
+ }
+push $N27ffb000
+push $N27ffb400
+ Dot {
+  name Dot1
+  xpos 11989
+  ypos -897
+ }
+set N28248400 [stack 0]
+ IBKColourV3 {
+  name IBKColourV3_18
+  tile_color 0x9900ff
+  xpos 11955
+  ypos -835
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  erode {{parent.ColourControl.ErodeLevel}}
+ }
+set N27b26800 [stack 0]
+ Dot {
+  name Dot18
+  xpos 11900
+  ypos -832
+ }
+ IBKColourV3 {
+  name IBKColourV3_2
+  xpos 11866
+  ypos -797
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 1
+ }
+set N28816300 [stack 0]
+ Dot {
+  name Dot19
+  xpos 11809
+  ypos -794
+ }
+ IBKColourV3 {
+  name IBKColourV3_6
+  xpos 11775
+  ypos -762
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 2
+ }
+set N2ab11e00 [stack 0]
+ Dot {
+  name Dot20
+  xpos 11726
+  ypos -759
+ }
+ IBKColourV3 {
+  name IBKColourV3_10
+  xpos 11692
+  ypos -727
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 4
+ }
+set N2b111900 [stack 0]
+ Dot {
+  name Dot21
+  xpos 11640
+  ypos -724
+ }
+ IBKColourV3 {
+  name IBKColourV3_13
+  xpos 11606
+  ypos -693
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 8
+ }
+set N27b71400 [stack 0]
+ Dot {
+  name Dot22
+  xpos 11554
+  ypos -690
+ }
+ IBKColourV3 {
+  name IBKColourV3_14
+  xpos 11520
+  ypos -659
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 16
+ }
+set N2ae7cf00 [stack 0]
+ Dot {
+  name Dot23
+  xpos 11457
+  ypos -656
+ }
+ IBKColourV3 {
+  name IBKColourV3_15
+  xpos 11423
+  ypos -625
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 32
+ }
+set N281fca00 [stack 0]
+ Dot {
+  name Dot24
+  xpos 11374
+  ypos -622
+ }
+ IBKColourV3 {
+  name IBKColourV3_16
+  xpos 11340
+  ypos -588
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 64
+ }
+set N2ad20500 [stack 0]
+ Dot {
+  name Dot25
+  xpos 11291
+  ypos -585
+ }
+ IBKColourV3 {
+  name IBKColourV3_17
+  xpos 11257
+  ypos -549
+  screen_type green
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 128
+ }
+push $N2ad20500
+push $N281fca00
+push $N2ae7cf00
+push $N27b71400
+push $N2b111900
+push $N2ab11e00
+push $N28816300
+push $N27b26800
+ Switch {
+  inputs 9
+  which {{parent.ColourControl.DilateSelect}}
+  name Switch4
+  tile_color 0xff00ff
+  xpos 11955
+  ypos -549
+ }
+ Dot {
+  name Dot27
+  xpos 11989
+  ypos -461
+ }
+push $N28248400
+ Dot {
+  name Dot28
+  xpos 12188
+  ypos -897
+ }
+ IBKColourV3 {
+  name IBKColourV3_3
+  tile_color 0x99ff
+  xpos 12154
+  ypos -832
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  erode {{parent.ColourControl.ErodeLevel}}
+ }
+set N1d84f700 [stack 0]
+ Dot {
+  name Dot9
+  xpos 12255
+  ypos -829
+ }
+ IBKColourV3 {
+  name IBKColourV3_11
+  tile_color 0x99ff
+  xpos 12221
+  ypos -783
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 1
+ }
+set N1461b200 [stack 0]
+ Dot {
+  name Dot11
+  xpos 12331
+  ypos -780
+ }
+ IBKColourV3 {
+  name IBKColourV3_1
+  tile_color 0x99ff
+  xpos 12297
+  ypos -746
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 2
+ }
+set N10d7ed00 [stack 0]
+ Dot {
+  name Dot10
+  xpos 12407
+  ypos -743
+ }
+ IBKColourV3 {
+  name IBKColourV3_4
+  tile_color 0x99ff
+  xpos 12373
+  ypos -716
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 4
+ }
+set N6bf24800 [stack 0]
+ Dot {
+  name Dot12
+  xpos 12483
+  ypos -713
+ }
+ IBKColourV3 {
+  name IBKColourV3_5
+  tile_color 0x99ff
+  xpos 12449
+  ypos -680
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 8
+ }
+set N1c0ee300 [stack 0]
+ Dot {
+  name Dot13
+  xpos 12559
+  ypos -677
+ }
+ IBKColourV3 {
+  name IBKColourV3_12
+  tile_color 0x99ff
+  xpos 12525
+  ypos -646
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 16
+ }
+set Nabf5e00 [stack 0]
+ Dot {
+  name Dot14
+  xpos 12635
+  ypos -643
+ }
+ IBKColourV3 {
+  name IBKColourV3_7
+  tile_color 0x99ff
+  xpos 12601
+  ypos -613
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 32
+ }
+set N26f13900 [stack 0]
+ Dot {
+  name Dot15
+  xpos 12711
+  ypos -610
+ }
+ IBKColourV3 {
+  name IBKColourV3_8
+  tile_color 0x99ff
+  xpos 12677
+  ypos -582
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 64
+ }
+set N22f69400 [stack 0]
+ Dot {
+  name Dot16
+  xpos 12787
+  ypos -579
+ }
+ IBKColourV3 {
+  name IBKColourV3_9
+  tile_color 0x99ff
+  xpos 12753
+  ypos -550
+  Size 1
+  off {{parent.ColourControl.darks.r} {parent.ColourControl.darks.g} {parent.ColourControl.darks.b}}
+  mult {{parent.ColourControl.lights.r} {parent.ColourControl.lights.g} {parent.ColourControl.lights.b}}
+  multi 128
+ }
+set N1e8f0f00 [stack 0]
+push $N1e8f0f00
+push $N22f69400
+push $N26f13900
+push $Nabf5e00
+push $N1c0ee300
+push $N6bf24800
+push $N10d7ed00
+push $N1461b200
+push $N1d84f700
+ Switch {
+  inputs 10
+  which {{parent.ColourControl.DilateSelect}}
+  name Switch1
+  tile_color 0x99ff
+  xpos 12154
+  ypos -550
+ }
+ Dot {
+  name Dot26
+  xpos 12188
+  ypos -461
+ }
+ Switch {
+  inputs 2
+  which {{parent.ColourControl.ScreenType}}
+  name Switch5
+  tile_color 0xff0000ff
+  xpos 12044
+  ypos -464
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos 12044
+  ypos -395
+ }
+ Dot {
+  name Dot2
+  xpos 12078
+  ypos -229
+ }
+set Nd16c400 [stack 0]
+ Shuffle {
+  green red
+  blue red
+  name Shuffle28
+  xpos 12044
+  ypos -138
+ }
+push $Nd16c400
+ Shuffle {
+  red blue
+  green blue
+  name Shuffle32
+  xpos 12150
+  ypos -137
+ }
+set N8e15c00 [stack 0]
+push $Nd16c400
+ Shuffle {
+  red green
+  blue green
+  name Shuffle29
+  xpos 11940
+  ypos -135
+ }
+set N8e15800 [stack 0]
+ Switch {
+  inputs 2
+  which {{parent.ColourControl.ScreenType}}
+  name Switch9
+  tile_color 0xffffffff
+  xpos 12150
+  ypos -70
+ }
+ Merge2 {
+  inputs 2
+  operation max
+  name Max21
+  xpos 12044
+  ypos -23
+ }
+push $N8e15800
+push $N8e15c00
+ Switch {
+  inputs 2
+  which {{parent.ColourControl.ScreenType}}
+  name Switch8
+  tile_color 0xffffffff
+  xpos 11940
+  ypos -70
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge14
+  xpos 11940
+  ypos -23
+ }
+ Dot {
+  name Dot220
+  xpos 11974
+  ypos 74
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge27
+  xpos 11063
+  ypos 68
+ }
+ Clamp {
+  channels rgb
+  maximum_enable false
+  name Clamp7
+  xpos 11063
+  ypos 92
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color {{parent.ColourControl.TargetColour.r} {parent.ColourControl.TargetColour.g} {parent.ColourControl.TargetColour.b} {curve}}
+  name Constant
+  xpos 12279
+  ypos -351
+ }
+push $Nd16c400
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge28
+  xpos 12279
+  ypos -232
+ }
+ Dot {
+  name Dot221
+  xpos 12313
+  ypos 160
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Multiply4
+  xpos 11063
+  ypos 154
+ }
+push $N27ffb400
+ Dot {
+  name Dot222
+  xpos 10981
+  ypos -897
+ }
+ Dot {
+  name Dot223
+  xpos 10981
+  ypos 209
+ }
+set N65592400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  name Merge29
+  xpos 11063
+  ypos 206
+ }
+push $Nd16c400
+ Dot {
+  name Dot4
+  xpos 11869
+  ypos -229
+ }
+ Dot {
+  name Dot5
+  xpos 11869
+  ypos 293
+ }
+push $N65592400
+ Switch {
+  inputs 3
+  which {{parent.ViewerSelect}}
+  name Switch2
+  tile_color 0xffffffff
+  xpos 11063
+  ypos 288
+ }
+ Output {
+  name Output1
+  xpos 11063
+  ypos 390
+ }
+ NoOp {
+  inputs 0
+  name ColourControl
+  xpos 12047
+  ypos -1026
+  addUserKnob {20 User}
+  addUserKnob {4 ScreenType l "Screen Type" M {Blue Green "" ""}}
+  addUserKnob {18 darks}
+  darks {0 0 0}
+  addUserKnob {6 darks_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 darks_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 lights}
+  lights {1 1 1}
+  addUserKnob {6 lights_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lights_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 ErodeLevel l erode R 0 50}
+  addUserKnob {4 DilateSelect l "Patch Back Level" M {0 1 2 4 8 16 32 64 128 "" ""}}
+  addUserKnob {18 TargetColour l "Target Colour"}
+  TargetColour {0 0 1}
+  addUserKnob {6 TargetColour_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 TargetColour_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+end_group
+Dot {
+ name Dot196
+ label "connection to flat keyer"
+ note_font_size 35
+ selected true
+ xpos 1398
+ ypos 592
+}
+set N27052800 [stack 0]
+push 0
+push 0
+Group {
+ inputs 3
+ name Soft_Keyer2
+ help "SoftKeyer 1.00   Simon Lehembre / Luc Julien\n\n\n"
+ tile_color 0xff7fff
+ gl_color 0xff
+ label "Black Screen Output\nPlus over BG"
+ selected true
+ xpos 1370
+ ypos 679
+ addUserKnob {20 User l softKeyer}
+ addUserKnob {26 ""}
+ addUserKnob {4 type l "screen type" M {green blue "" "" "" "" ""}}
+ type blue
+ addUserKnob {4 outputmode l "    output mode" -STARTLINE M {"black screen" "white screen" "spill supress" composite ""}}
+ addUserKnob {26 ""}
+ addUserKnob {41 add l "screen color" T constant_sk.add}
+ addUserKnob {41 red_weight l "red weight" T IBK_sk.red_weight}
+ addUserKnob {41 blue_green_weight l "blue/green weight" T IBK_sk.blue_green_weight}
+ addUserKnob {26 ""}
+ addUserKnob {7 edgetune l "edge tune" R -2 2}
+ addUserKnob {26 ""}
+ addUserKnob {6 Fgsuperwhite l "clamp blend" -STARTLINE}
+ addUserKnob {20 About}
+ addUserKnob {26 ""}
+ addUserKnob {26 copyright l "" +STARTLINE T "               SoftKeyer 1.00     ©    "}
+ addUserKnob {22 lucjulien_linkedin l "Luc Julien" -STARTLINE T "import os\nimport sys\n\ntry:\n    import subprocess\n    def _run(cmd, shell, wait):\n        opener = subprocess.Popen(cmd, shell=shell)\n        if wait:\n            opener.wait()\n        return opener.pid\nexcept ImportError:\n    import popen2\n    def _run(cmd, shell, wait):\n        opener = popen2.Popen3(cmd)\n        if wait:\n            opener.wait()\n        return opener.pid\n\ndef _open(url, wait=0):\n    if sys.platform == \"darwin\":\n        cmd = \[\"open\", url]\n    elif hasattr(os, \"startfile\"):\n        return os.startfile(url)\n    elif os.environ.has_key(\"KDE_FULL_SESSION\") or os.environ.has_key(\"KDE_MULTIHEAD\") or \\\n        os.environ.has_key(\"GNOME_DESKTOP_SESSION_ID\") or os.environ.has_key(\"GNOME_KEYRING_SOCKET\"):\n        cmd = \[\"xdg-open\", url]\n    else:\n        raise OSError, \"Desktop not supported.\"\n\n    return _run(cmd, 0, wait)\n\n_open('http://www.linkedin.com/in/lucjulien')\n"}
+ addUserKnob {26 divider l "" -STARTLINE T "     "}
+ addUserKnob {22 Simonlehembre l "Simon Lehembre" -STARTLINE T "import os\nimport sys\n\ntry:\n    import subprocess\n    def _run(cmd, shell, wait):\n        opener = subprocess.Popen(cmd, shell=shell)\n        if wait:\n            opener.wait()\n        return opener.pid\nexcept ImportError:\n    import popen2\n    def _run(cmd, shell, wait):\n        opener = popen2.Popen3(cmd)\n        if wait:\n            opener.wait()\n        return opener.pid\n\ndef _open(url, wait=0):\n    if sys.platform == \"darwin\":\n        cmd = \[\"open\", url]\n    elif hasattr(os, \"startfile\"):\n        return os.startfile(url)\n    elif os.environ.has_key(\"KDE_FULL_SESSION\") or os.environ.has_key(\"KDE_MULTIHEAD\") or \\\n        os.environ.has_key(\"GNOME_DESKTOP_SESSION_ID\") or os.environ.has_key(\"GNOME_KEYRING_SOCKET\"):\n        cmd = \[\"xdg-open\", url]\n    else:\n        raise OSError, \"Desktop not supported.\"\n\n    return _run(cmd, 0, wait)\n\n_open('http://ca.linkedin.com/pub/simon-lehembre/8/217/BB5')\n"}
+}
+ Input {
+  inputs 0
+  name out
+  xpos 1055
+  ypos -396
+ }
+ Expression {
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 a==0?0:a
+  name Expression4
+  xpos 1055
+  ypos 950
+ }
+ Input {
+  inputs 0
+  name bg
+  xpos 760
+  ypos -393
+  number 1
+ }
+ Dot {
+  name Dot17
+  xpos 794
+  ypos 46
+ }
+set N1c0c7800 [stack 0]
+ Dot {
+  name Dot74
+  xpos 794
+  ypos 378
+ }
+set N1c0c7400 [stack 0]
+ Dot {
+  name Dot14
+  xpos 894
+  ypos 378
+ }
+ Dot {
+  name Dot15
+  xpos 894
+  ypos 848
+ }
+ Dot {
+  name Dot16
+  xpos 494
+  ypos 848
+ }
+ Input {
+  inputs 0
+  name in
+  xpos -545
+  ypos -394
+  number 3
+ }
+ Dot {
+  name Dot6
+  xpos -506
+  ypos 714
+ }
+ Input {
+  inputs 0
+  name fg
+  xpos -240
+  ypos -394
+  number 2
+ }
+ Dot {
+  name Dot12
+  xpos -206
+  ypos -246
+ }
+set N1a4c1800 [stack 0]
+ Dot {
+  name Dot8
+  xpos -206
+  ypos -150
+ }
+set N1a4c1400 [stack 0]
+ Keyer {
+  operation "luminance key"
+  name Keyer2
+  xpos -445
+  ypos -160
+ }
+ Dot {
+  name Dot3
+  xpos -406
+  ypos 330
+ }
+push $N1a4c1400
+ Dot {
+  name Dot4
+  xpos -106
+  ypos -150
+ }
+set N1a4c0800 [stack 0]
+ Dot {
+  name Dot9
+  xpos 94
+  ypos -150
+ }
+ Expression {
+  expr2 min(b,(r+g)*(colortune-.5))
+  expr3 b-r*colortune
+  name Expression2
+  xpos 60
+  ypos -105
+  addUserKnob {20 Tune}
+  addUserKnob {7 colortune l "color Tune" R 0.5 1.5}
+  colortune {{parent.IBK_sk.blue_green_weight+.5 i}}
+ }
+push $N1a4c0800
+ Expression {
+  expr1 min(g,(r+b)*(colortune-.5))
+  expr3 g-r*colortune
+  name Expression1
+  xpos -140
+  ypos -105
+  addUserKnob {20 Tune}
+  addUserKnob {7 colortune l "color Tune" R 0.5 1.5}
+  colortune {{parent.IBK_sk.blue_green_weight+.5 i}}
+ }
+ Switch {
+  inputs 2
+  which {{parent.type i}}
+  name Switch_screen_type
+  xpos -45
+  ypos -56
+ }
+ Dot {
+  name Dot11
+  xpos -11
+  ypos -13
+ }
+set N191bb400 [stack 0]
+push $N1a4c1400
+push $N191bb400
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos -240
+  ypos -16
+ }
+ Saturation {
+  saturation 0
+  mode Maximum
+  name Saturation2
+  xpos -240
+  ypos 42
+ }
+ Dot {
+  name Dot5
+  xpos -206
+  ypos 95
+ }
+set N191ba800 [stack 0]
+ Grade {
+  white {{parent.edgetune+1 i}}
+  multiply {{"1/(constant_sk.add.b-(min(constant_sk.add.b,(constant_sk.add.r+constant_sk.add.g)*.5)))\n\n\n" i}}
+  black_clamp false
+  white_clamp {{parent.Fgsuperwhite i}}
+  name TuneBlue
+  xpos -189
+  ypos 131
+ }
+push $N191ba800
+ Grade {
+  white {{parent.edgetune+1 i}}
+  multiply {{"1/(constant_sk.add.g-(min(constant_sk.add.g,(constant_sk.add.r+constant_sk.add.b)*.5)))\n" i}}
+  black_clamp false
+  white_clamp {{parent.Fgsuperwhite i}}
+  name TuneGreen
+  xpos -290
+  ypos 132
+ }
+ Switch {
+  inputs 2
+  which {{parent.type i}}
+  name Switch_screen_type2
+  xpos -237
+  ypos 182
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge47
+  xpos -45
+  ypos 182
+ }
+set N16451800 [stack 0]
+push $N1a4c1800
+ Dot {
+  name Dot20
+  xpos 294
+  ypos -246
+ }
+set N16451400 [stack 0]
+ Dot {
+  name Dot10
+  xpos 494
+  ypos -246
+ }
+ Grade {
+  multiply 0
+  add {0 0 1 0}
+  black_clamp false
+  name constant_sk
+  xpos 460
+  ypos -182
+ }
+set N16450c00 [stack 0]
+push $N16451400
+push $N16451400
+ IBK {
+  inputs 3
+  name IBK1
+  note_font_color 0xff00
+  xpos 460
+  ypos -106
+ }
+push $N16450c00
+push $N16451400
+push $N16451400
+ IBK {
+  inputs 3
+  screen_type green
+  red_weight 0.5
+  blue_green_weight 0.5
+  name IBK_sk
+  note_font_color 0xff0000
+  xpos 260
+  ypos -107
+ }
+ Switch {
+  inputs 2
+  which {{parent.type i}}
+  name Switch_screen_type1
+  xpos 360
+  ypos -58
+ }
+set N16450000 [stack 0]
+ Dot {
+  name Dot23
+  xpos 394
+  ypos 330
+ }
+set N14471c00 [stack 0]
+ Keymix {
+  inputs 3
+  channels rgba
+  bbox B
+  name Keymix1
+  xpos -245
+  ypos 326
+ }
+set N14471800 [stack 0]
+ MergeExpression {
+  inputs 2
+  temp_name0 x
+  temp_expr0 Aa==0?0:Aa
+  expr0 r*x
+  expr1 g*x
+  expr2 b*x
+  expr3 x
+  name MergeExpression1
+  xpos -245
+  ypos 711
+ }
+push $N1c0c7400
+push $N191ba800
+ Grade {
+  channels rgba
+  white 4
+  white_clamp true
+  name Grade1
+  xpos 56
+  ypos 92
+ }
+push $N1c0c7800
+ Clamp {
+  channels rgba
+  minimum 1
+  maximum_enable false
+  MinClampTo 1
+  MinClampTo_enable true
+  maskChannelMask rgba.red
+  name Clamp1
+  xpos 256
+  ypos 43
+ }
+ Clamp {
+  inputs 1+1
+  channels rgba
+  maskChannelMask rgba.red
+  invert_mask true
+  name Clamp2
+  xpos 256
+  ypos 92
+ }
+push $N16451800
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge5
+  xpos -45
+  ypos 239
+ }
+ Dot {
+  name Dot13
+  xpos -11
+  ypos 382
+ }
+set N14470000 [stack 0]
+push $N14471c00
+ Keymix {
+  inputs 3
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  maskChannel rgba.blue
+  name Keymix11
+  xpos 760
+  ypos 462
+ }
+ Dot {
+  name Dot2
+  xpos 794
+  ypos 605
+ }
+push $N1c0c7400
+push $N14470000
+push $N14471c00
+ Keymix {
+  inputs 3
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  maskChannel rgba.red
+  name Keymix9
+  xpos -45
+  ypos 464
+ }
+ Dot {
+  name Dot1
+  xpos -11
+  ypos 526
+ }
+push $N1c0c7400
+push $N14470000
+push $N14471c00
+ Keymix {
+  inputs 3
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  maskChannel rgba.green
+  name Keymix10
+  xpos 360
+  ypos 464
+ }
+ ShuffleCopy {
+  inputs 2
+  red red
+  blue black
+  alpha alpha2
+  name ShuffleCopy1
+  xpos 360
+  ypos 523
+ }
+ ShuffleCopy {
+  inputs 2
+  blue blue
+  alpha alpha2
+  name ShuffleCopy2
+  xpos 360
+  ypos 602
+ }
+ Merge2 {
+  inputs 2
+  name Merge4
+  xpos 360
+  ypos 711
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  name Keymix2
+  xpos 360
+  ypos 950
+ }
+ NoOp {
+  name composite
+  xpos 504
+  ypos 1094
+ }
+push $N14471800
+ NoOp {
+  name spill_supress
+  xpos 404
+  ypos 1094
+ }
+push $N16451800
+ NoOp {
+  name white_screen
+  xpos 304
+  ypos 1094
+ }
+push $N16450000
+ NoOp {
+  name black_screen
+  xpos 204
+  ypos 1094
+ }
+ Switch {
+  inputs 4
+  which {{outputmode i}}
+  name Switch1
+  xpos 355
+  ypos 1286
+ }
+ Output {
+  name Output1
+  xpos 355
+  ypos 1430
+ }
+end_group
+Dot {
+ name Dot197
+ selected true
+ xpos 1398
+ ypos 950
+}
+push $N27052800
+Dot {
+ name Dot198
+ selected true
+ xpos 1159
+ ypos 592
+}
+push 0
+push 0
+Group {
+ inputs 3
+ name Soft_Keyer3
+ help "SoftKeyer 1.00   Simon Lehembre / Luc Julien\n\n\n"
+ tile_color 0xff7fff
+ gl_color 0xff
+ label "White Screen Output\nMultiply over BG"
+ selected true
+ xpos 1131
+ ypos 681
+ addUserKnob {20 User l softKeyer}
+ addUserKnob {26 ""}
+ addUserKnob {4 type l "screen type" M {green blue "" "" "" "" ""}}
+ type blue
+ addUserKnob {4 outputmode l "    output mode" -STARTLINE M {"black screen" "white screen" "spill supress" composite ""}}
+ outputmode "white screen"
+ addUserKnob {26 ""}
+ addUserKnob {41 add l "screen color" T constant_sk.add}
+ addUserKnob {41 red_weight l "red weight" T IBK_sk.red_weight}
+ addUserKnob {41 blue_green_weight l "blue/green weight" T IBK_sk.blue_green_weight}
+ addUserKnob {26 ""}
+ addUserKnob {7 edgetune l "edge tune" R -2 2}
+ addUserKnob {26 ""}
+ addUserKnob {6 Fgsuperwhite l "clamp blend" -STARTLINE}
+ addUserKnob {20 About}
+ addUserKnob {26 ""}
+ addUserKnob {26 copyright l "" +STARTLINE T "               SoftKeyer 1.00     ©    "}
+ addUserKnob {22 lucjulien_linkedin l "Luc Julien" -STARTLINE T "import os\nimport sys\n\ntry:\n    import subprocess\n    def _run(cmd, shell, wait):\n        opener = subprocess.Popen(cmd, shell=shell)\n        if wait:\n            opener.wait()\n        return opener.pid\nexcept ImportError:\n    import popen2\n    def _run(cmd, shell, wait):\n        opener = popen2.Popen3(cmd)\n        if wait:\n            opener.wait()\n        return opener.pid\n\ndef _open(url, wait=0):\n    if sys.platform == \"darwin\":\n        cmd = \[\"open\", url]\n    elif hasattr(os, \"startfile\"):\n        return os.startfile(url)\n    elif os.environ.has_key(\"KDE_FULL_SESSION\") or os.environ.has_key(\"KDE_MULTIHEAD\") or \\\n        os.environ.has_key(\"GNOME_DESKTOP_SESSION_ID\") or os.environ.has_key(\"GNOME_KEYRING_SOCKET\"):\n        cmd = \[\"xdg-open\", url]\n    else:\n        raise OSError, \"Desktop not supported.\"\n\n    return _run(cmd, 0, wait)\n\n_open('http://www.linkedin.com/in/lucjulien')\n"}
+ addUserKnob {26 divider l "" -STARTLINE T "     "}
+ addUserKnob {22 Simonlehembre l "Simon Lehembre" -STARTLINE T "import os\nimport sys\n\ntry:\n    import subprocess\n    def _run(cmd, shell, wait):\n        opener = subprocess.Popen(cmd, shell=shell)\n        if wait:\n            opener.wait()\n        return opener.pid\nexcept ImportError:\n    import popen2\n    def _run(cmd, shell, wait):\n        opener = popen2.Popen3(cmd)\n        if wait:\n            opener.wait()\n        return opener.pid\n\ndef _open(url, wait=0):\n    if sys.platform == \"darwin\":\n        cmd = \[\"open\", url]\n    elif hasattr(os, \"startfile\"):\n        return os.startfile(url)\n    elif os.environ.has_key(\"KDE_FULL_SESSION\") or os.environ.has_key(\"KDE_MULTIHEAD\") or \\\n        os.environ.has_key(\"GNOME_DESKTOP_SESSION_ID\") or os.environ.has_key(\"GNOME_KEYRING_SOCKET\"):\n        cmd = \[\"xdg-open\", url]\n    else:\n        raise OSError, \"Desktop not supported.\"\n\n    return _run(cmd, 0, wait)\n\n_open('http://ca.linkedin.com/pub/simon-lehembre/8/217/BB5')\n"}
+}
+ Input {
+  inputs 0
+  name out
+  xpos 1055
+  ypos -396
+ }
+ Expression {
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 a==0?0:a
+  name Expression4
+  xpos 1055
+  ypos 950
+ }
+ Input {
+  inputs 0
+  name bg
+  xpos 760
+  ypos -393
+  number 1
+ }
+ Dot {
+  name Dot17
+  xpos 794
+  ypos 46
+ }
+set Nb254c00 [stack 0]
+ Dot {
+  name Dot74
+  xpos 794
+  ypos 378
+ }
+set Nb254800 [stack 0]
+ Dot {
+  name Dot14
+  xpos 894
+  ypos 378
+ }
+ Dot {
+  name Dot15
+  xpos 894
+  ypos 848
+ }
+ Dot {
+  name Dot16
+  xpos 494
+  ypos 848
+ }
+ Input {
+  inputs 0
+  name in
+  xpos -545
+  ypos -394
+  number 3
+ }
+ Dot {
+  name Dot6
+  xpos -506
+  ypos 714
+ }
+ Input {
+  inputs 0
+  name fg
+  xpos -240
+  ypos -394
+  number 2
+ }
+ Dot {
+  name Dot12
+  xpos -206
+  ypos -246
+ }
+set Na03cc00 [stack 0]
+ Dot {
+  name Dot8
+  xpos -206
+  ypos -150
+ }
+set Na03c800 [stack 0]
+ Keyer {
+  operation "luminance key"
+  name Keyer2
+  xpos -445
+  ypos -160
+ }
+ Dot {
+  name Dot3
+  xpos -406
+  ypos 330
+ }
+push $Na03c800
+ Dot {
+  name Dot4
+  xpos -106
+  ypos -150
+ }
+set N8c45c00 [stack 0]
+ Dot {
+  name Dot9
+  xpos 94
+  ypos -150
+ }
+ Expression {
+  expr2 min(b,(r+g)*(colortune-.5))
+  expr3 b-r*colortune
+  name Expression2
+  xpos 60
+  ypos -105
+  addUserKnob {20 Tune}
+  addUserKnob {7 colortune l "color Tune" R 0.5 1.5}
+  colortune {{parent.IBK_sk.blue_green_weight+.5 i}}
+ }
+push $N8c45c00
+ Expression {
+  expr1 min(g,(r+b)*(colortune-.5))
+  expr3 g-r*colortune
+  name Expression1
+  xpos -140
+  ypos -105
+  addUserKnob {20 Tune}
+  addUserKnob {7 colortune l "color Tune" R 0.5 1.5}
+  colortune {{parent.IBK_sk.blue_green_weight+.5 i}}
+ }
+ Switch {
+  inputs 2
+  which {{parent.type i}}
+  name Switch_screen_type
+  xpos -45
+  ypos -56
+ }
+ Dot {
+  name Dot11
+  xpos -11
+  ypos -13
+ }
+set N8c44800 [stack 0]
+push $Na03c800
+push $N8c44800
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos -240
+  ypos -16
+ }
+ Saturation {
+  saturation 0
+  mode Maximum
+  name Saturation2
+  xpos -240
+  ypos 42
+ }
+ Dot {
+  name Dot5
+  xpos -206
+  ypos 95
+ }
+set N80e3c00 [stack 0]
+ Grade {
+  white {{parent.edgetune+1 i}}
+  multiply {{"1/(constant_sk.add.b-(min(constant_sk.add.b,(constant_sk.add.r+constant_sk.add.g)*.5)))\n\n\n" i}}
+  black_clamp false
+  white_clamp {{parent.Fgsuperwhite i}}
+  name TuneBlue
+  xpos -189
+  ypos 131
+ }
+push $N80e3c00
+ Grade {
+  white {{parent.edgetune+1 i}}
+  multiply {{"1/(constant_sk.add.g-(min(constant_sk.add.g,(constant_sk.add.r+constant_sk.add.b)*.5)))\n" i}}
+  black_clamp false
+  white_clamp {{parent.Fgsuperwhite i}}
+  name TuneGreen
+  xpos -290
+  ypos 132
+ }
+ Switch {
+  inputs 2
+  which {{parent.type i}}
+  name Switch_screen_type2
+  xpos -237
+  ypos 182
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge47
+  xpos -45
+  ypos 182
+ }
+set N80e2c00 [stack 0]
+push $Na03cc00
+ Dot {
+  name Dot20
+  xpos 294
+  ypos -246
+ }
+set N80e2800 [stack 0]
+ Dot {
+  name Dot10
+  xpos 494
+  ypos -246
+ }
+ Grade {
+  multiply 0
+  add {0 0 1 0}
+  black_clamp false
+  name constant_sk
+  xpos 460
+  ypos -182
+ }
+set N80e2000 [stack 0]
+push $N80e2800
+push $N80e2800
+ IBK {
+  inputs 3
+  name IBK1
+  note_font_color 0xff00
+  xpos 460
+  ypos -106
+ }
+push $N80e2000
+push $N80e2800
+push $N80e2800
+ IBK {
+  inputs 3
+  screen_type green
+  red_weight 0.5
+  blue_green_weight 0.5
+  name IBK_sk
+  note_font_color 0xff0000
+  xpos 260
+  ypos -107
+ }
+ Switch {
+  inputs 2
+  which {{parent.type i}}
+  name Switch_screen_type1
+  xpos 360
+  ypos -58
+ }
+set N1cd11400 [stack 0]
+ Dot {
+  name Dot23
+  xpos 394
+  ypos 330
+ }
+set N1cd11000 [stack 0]
+ Keymix {
+  inputs 3
+  channels rgba
+  bbox B
+  name Keymix1
+  xpos -245
+  ypos 326
+ }
+set N1cd10c00 [stack 0]
+ MergeExpression {
+  inputs 2
+  temp_name0 x
+  temp_expr0 Aa==0?0:Aa
+  expr0 r*x
+  expr1 g*x
+  expr2 b*x
+  expr3 x
+  name MergeExpression1
+  xpos -245
+  ypos 711
+ }
+push $Nb254800
+push $N80e3c00
+ Grade {
+  channels rgba
+  white 4
+  white_clamp true
+  name Grade1
+  xpos 56
+  ypos 92
+ }
+push $Nb254c00
+ Clamp {
+  channels rgba
+  minimum 1
+  maximum_enable false
+  MinClampTo 1
+  MinClampTo_enable true
+  maskChannelMask rgba.red
+  name Clamp1
+  xpos 256
+  ypos 43
+ }
+ Clamp {
+  inputs 1+1
+  channels rgba
+  maskChannelMask rgba.red
+  invert_mask true
+  name Clamp2
+  xpos 256
+  ypos 92
+ }
+push $N80e2c00
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge5
+  xpos -45
+  ypos 239
+ }
+ Dot {
+  name Dot13
+  xpos -11
+  ypos 382
+ }
+set Ncd07400 [stack 0]
+push $N1cd11000
+ Keymix {
+  inputs 3
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  maskChannel rgba.blue
+  name Keymix11
+  xpos 760
+  ypos 462
+ }
+ Dot {
+  name Dot2
+  xpos 794
+  ypos 605
+ }
+push $Nb254800
+push $Ncd07400
+push $N1cd11000
+ Keymix {
+  inputs 3
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  maskChannel rgba.red
+  name Keymix9
+  xpos -45
+  ypos 464
+ }
+ Dot {
+  name Dot1
+  xpos -11
+  ypos 526
+ }
+push $Nb254800
+push $Ncd07400
+push $N1cd11000
+ Keymix {
+  inputs 3
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  maskChannel rgba.green
+  name Keymix10
+  xpos 360
+  ypos 464
+ }
+ ShuffleCopy {
+  inputs 2
+  red red
+  blue black
+  alpha alpha2
+  name ShuffleCopy1
+  xpos 360
+  ypos 523
+ }
+ ShuffleCopy {
+  inputs 2
+  blue blue
+  alpha alpha2
+  name ShuffleCopy2
+  xpos 360
+  ypos 602
+ }
+ Merge2 {
+  inputs 2
+  name Merge4
+  xpos 360
+  ypos 711
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  name Keymix2
+  xpos 360
+  ypos 950
+ }
+ NoOp {
+  name composite
+  xpos 504
+  ypos 1094
+ }
+push $N1cd10c00
+ NoOp {
+  name spill_supress
+  xpos 404
+  ypos 1094
+ }
+push $N80e2c00
+ NoOp {
+  name white_screen
+  xpos 304
+  ypos 1094
+ }
+push $N1cd11400
+ NoOp {
+  name black_screen
+  xpos 204
+  ypos 1094
+ }
+ Switch {
+  inputs 4
+  which {{outputmode i}}
+  name Switch1
+  xpos 355
+  ypos 1286
+ }
+ Output {
+  name Output1
+  xpos 355
+  ypos 1430
+ }
+end_group
+Dot {
+ name Dot199
+ selected true
+ xpos 1159
+ ypos 801
+}
+Dot {
+ inputs 0
+ name Dot200
+ selected true
+ xpos 688
+ ypos 278
+}
+set N6938d000 [stack 0]
+Merge2 {
+ inputs 2
+ operation multiply
+ name Multiply1
+ selected true
+ xpos 660
+ ypos 804
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge21
+ selected true
+ xpos 660
+ ypos 953
+}
+push $N6938d000
+Dot {
+ name Dot226
+ selected true
+ xpos 2341
+ ypos 278
+}
