@@ -1,0 +1,82 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+Group {
+ name Relight_simple
+ tile_color 0x73ad34ff
+ selected true
+ xpos 747
+ ypos 449
+ addUserKnob {20 Relight_Simple}
+ addUserKnob {41 ChannelsRelight l Channels T Shuffle1.in}
+ addUserKnob {41 posX T RELIGHT_EXP9.posX}
+ addUserKnob {41 posY T RELIGHT_EXP9.posY}
+ addUserKnob {41 posZ T RELIGHT_EXP9.posZ}
+ addUserKnob {6 Inverse_Light +STARTLINE}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 297
+  ypos -247
+ }
+ Shuffle {
+  name Shuffle1
+  xpos 297
+  ypos -203
+ }
+ Expression {
+  temp_name0 light
+  temp_expr0 "sqrt(  (posX-r)*(posX-r) + (posY-g)*(posY-g) + (posZ-b)*(posZ-b) )"
+  expr0 light
+  expr1 light
+  expr2 light
+  expr3 light
+  name RELIGHT_EXP9
+  xpos 297
+  ypos -165
+  addUserKnob {20 User}
+  addUserKnob {7 posX R -2 2}
+  posX 0.08
+  addUserKnob {7 posY R -2 2}
+  posY 0.46
+  addUserKnob {7 posZ R -2 2}
+  posZ 0.56
+ }
+ Invert {
+  channels rgba
+  name RELIGHT_INV9
+  xpos 297
+  ypos -138
+ }
+set N4cdf8c00 [stack 0]
+ Invert {
+  name RELIGHT_b9
+  xpos 187
+  ypos -144
+ }
+ Grade {
+  gamma 0.1
+  name RELIGHT_Grade9
+  xpos 187
+  ypos -105
+ }
+push $N4cdf8c00
+ Switch {
+  inputs 2
+  which {{parent.Inverse_Light}}
+  name RELIGHT_Switch9
+  xpos 297
+  ypos -105
+ }
+ Clamp {
+  name Clamp1
+  xpos 297
+  ypos -79
+ }
+ Output {
+  name Output1
+  xpos 297
+  ypos -5
+ }
+end_group
