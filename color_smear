@@ -2,11 +2,11 @@ set cut_paste_input [stack 0]
 version 11.3 v5
 push $cut_paste_input
 Group {
- name Colour_Smear
+ name Colour_Smear1
  note_font Verdana
  selected true
- xpos 1194
- ypos 1390
+ xpos -313
+ ypos -196
  addUserKnob {20 User}
  addUserKnob {26 smearing l Smearing T ""}
  addUserKnob {6 already_premulted l "Input is premultiplied?" t "Click checkbox \"on\" if image is already premulted" +STARTLINE}
@@ -186,14 +186,14 @@ Group {
   xpos -1238
   ypos -298
  }
-set Nda58f800 [stack 0]
+set N309b2000 [stack 0]
  Dot {
   name Dot29
   note_font Verdana
   xpos -1204
   ypos -109
  }
-set Nda58f400 [stack 0]
+set N309c9c00 [stack 0]
  Dot {
   name Dot7
   xpos -1204
@@ -205,15 +205,15 @@ set Nda58f400 [stack 0]
   xpos -1204
   ypos 1564
  }
-set Nda58ec00 [stack 0]
-push $Nda58f400
+set N309c9400 [stack 0]
+push $N309c9c00
  Unpremult {
   name Unpremult2
   note_font Verdana
   xpos -1073
   ypos -108
  }
-push $Nda58f400
+push $N309c9c00
  Switch {
   inputs 2
   which {{"\[value parent.already_premulted]" i}}
@@ -228,41 +228,41 @@ push $Nda58f400
   xpos -901
   ypos -52
  }
-set Nda58e000 [stack 0]
+set N309c8800 [stack 0]
  Dot {
   name Dot5
   xpos -562
   ypos -52
  }
-set Ndab61c00 [stack 0]
+set N309c8400 [stack 0]
  Dot {
   name Dot17
   note_font Verdana
   xpos 42
   ypos -52
  }
-set Ndab61800 [stack 0]
+set N309c8000 [stack 0]
  Dot {
   name Dot38
   note_font Verdana
   xpos 42
   ypos 122
  }
-set Ndab61400 [stack 0]
+set N309e1c00 [stack 0]
  Dot {
   name Dot145
   note_font Verdana
   xpos -39
   ypos 122
  }
-set Ndab61000 [stack 0]
+set N309e1800 [stack 0]
  Dot {
   name Dot138
   note_font Verdana
   xpos -92
   ypos 185
  }
-push $Ndab61000
+push $N309e1800
  Dot {
   name Dot39
   note_font Verdana
@@ -313,7 +313,7 @@ push $Ndab61000
   xpos -37
   ypos 659
  }
-push $Ndab61400
+push $N309e1c00
  Dot {
   name Dot20
   note_font Verdana
@@ -373,7 +373,7 @@ push $Ndab61400
   xpos 7
   ypos 747
  }
-push $Ndab61800
+push $N309c8000
  Dot {
   name Dot71
   note_font Verdana
@@ -386,8 +386,8 @@ push $Ndab61800
   xpos 1045
   ypos 100
  }
-set N2a940800 [stack 0]
-push $N2a940800
+set N30a3f000 [stack 0]
+push $N30a3f000
  Input {
   inputs 0
   name OMIT
@@ -403,7 +403,7 @@ push $N2a940800
   xpos 1616
   ypos 50
  }
-set N2a940000 [stack 0]
+set N30a3e800 [stack 0]
  Merge2 {
   inputs 2
   operation out
@@ -495,7 +495,7 @@ set N2a940000 [stack 0]
   xpos 41
   ypos 1122
  }
-set Nd9d4a800 [stack 0]
+set N30a8f000 [stack 0]
  Merge2 {
   inputs 2
   operation mask
@@ -503,15 +503,15 @@ set Nd9d4a800 [stack 0]
   xpos -498
   ypos 1611
  }
-push $Nda58ec00
-push $Ndab61c00
+push $N309c9400
+push $N309c8400
  Dot {
   name Dot6
   xpos -562
   ypos 162
  }
-set Nd9d4a000 [stack 0]
-push $Nd9d4a000
+set N30a8e800 [stack 0]
+push $N30a8e800
  Blur {
   size {{"\[value parent.sharpness]" i}}
   name Blur1
@@ -536,9 +536,9 @@ push $Nd9d4a000
   xpos -554
   ypos 1268
  }
-push $Nd9d4a800
-push $Nd9d4a800
-push $N2a940000
+push $N30a8f000
+push $N30a8f000
+push $N30a3e800
  Dot {
   name Dot3
   note_font Verdana
@@ -579,7 +579,7 @@ push $N2a940000
   xpos -588
   ypos 1393
  }
-push $Nda58e000
+push $N309c8800
  Merge2 {
   inputs 2
   name Merge13
@@ -594,14 +594,14 @@ push $Nda58e000
   xpos -1238
   ypos 1725
  }
-set Nd90bd000 [stack 0]
+set N30ae9800 [stack 0]
  Premult {
   name Premult10
   note_font Verdana
   xpos -1130
   ypos 1789
  }
-push $Nd90bd000
+push $N30ae9800
  Switch {
   inputs 2
   which {{"\[value parent.output_premulted]" i}}
@@ -615,7 +615,7 @@ push $Nd90bd000
   xpos -1204
   ypos 1996
  }
-set Nd90bc400 [stack 0]
+set N30ae8c00 [stack 0]
 add_layer {smearmask smearmask.a}
  ShuffleCopy {
   inputs 2
@@ -627,7 +627,7 @@ add_layer {smearmask smearmask.a}
   xpos -1140
   ypos 2066
  }
-push $Nd90bc400
+push $N30ae8c00
  Switch {
   inputs 2
   which {{"\[value parent.outputmask]"}}
@@ -637,7 +637,7 @@ push $Nd90bc400
   xpos -1238
   ypos 2141
  }
-set Nd96cfc00 [stack 0]
+set N30ae8400 [stack 0]
  Dot {
   name Dot19
   note_font Verdana
@@ -650,13 +650,13 @@ set Nd96cfc00 [stack 0]
   xpos -1238
   ypos 2422
  }
-push $Nd90bc400
+push $N30ae8c00
 push 0
 push 0
 push 0
 push 0
-push $Nda58f800
-push $Nd96cfc00
+push $N309b2000
+push $N30ae8400
  Viewer {
   inputs 7
   frame 1059
