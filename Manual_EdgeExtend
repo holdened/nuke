@@ -1,0 +1,214 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+Read {
+ inputs 0
+ file_type jpeg
+ file D:/Work.nuke/KeyTest/tropical-plant-leaves-branches-white-isolated-background-green-foliage-backdrop-tree-border-beautiful-greenery-144417397.jpg
+ format "1600 1154 0 0 1600 1154 1 "
+ origset true
+ name Read4
+ selected true
+ xpos -1712
+ ypos -420
+}
+Crop {
+ box {0 89 1600 1155}
+ reformat true
+ crop false
+ name Crop3
+ selected true
+ xpos -1712
+ ypos -338
+}
+Reformat {
+ name Reformat4
+ selected true
+ xpos -1712
+ ypos -289
+}
+set N69a6a000 [stack 0]
+Keyer {
+ invert true
+ operation "luminance key"
+ range {0.8090957299 0.9115931415 1 1}
+ name Keyer3
+ selected true
+ xpos -1632
+ ypos -230
+}
+push $N69a6a000
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy4
+ selected true
+ xpos -1712
+ ypos -182
+}
+Dot {
+ name Dot5
+ selected true
+ xpos -1684
+ ypos -33
+}
+set N69aa3000 [stack 0]
+Dot {
+ name Dot6
+ selected true
+ xpos -1543
+ ypos -33
+}
+set N69ad3000 [stack 0]
+Dot {
+ name Dot10
+ selected true
+ xpos -1473
+ ypos 55
+}
+push $N69ad3000
+Dot {
+ name Dot11
+ selected true
+ xpos -1610
+ ypos 60
+}
+Merge2 {
+ inputs 2
+ operation xor
+ name Merge6
+ selected true
+ xpos -1519
+ ypos 111
+}
+push $N69aa3000
+Premult {
+ name Premult6
+ selected true
+ xpos -1631
+ ypos -145
+}
+push $N69ad3000
+Dot {
+ name Dot7
+ selected true
+ xpos -1375
+ ypos -33
+}
+set N69afb400 [stack 0]
+Dot {
+ name Dot8
+ selected true
+ xpos -1246
+ ypos -33
+}
+push $N69ad3000
+FilterErode {
+ channels alpha
+ size 1.4
+ filter gaussian
+ name FilterErode3
+ selected true
+ xpos -1577
+ ypos -3
+}
+Invert {
+ name Invert1
+ selected true
+ xpos -1577
+ ypos 31
+}
+Blur {
+ size 2
+ name Blur4
+ selected true
+ xpos -1577
+ ypos 65
+}
+push $N69aa3000
+FilterErode {
+ channels alpha
+ size 5.9
+ filter gaussian
+ name FilterErode2
+ selected true
+ xpos -1712
+ ypos 5
+}
+Grade {
+ channels alpha
+ blackpoint 0.058
+ whitepoint 0.68
+ name Grade1
+ selected true
+ xpos -1712
+ ypos 39
+}
+Premult {
+ name Premult3
+ selected true
+ xpos -1712
+ ypos 73
+}
+Blur {
+ size 13
+ name Blur2
+ selected true
+ xpos -1712
+ ypos 97
+}
+Unpremult {
+ name Unpremult1
+ selected true
+ xpos -1712
+ ypos 131
+}
+Blur {
+ size 5
+ name Blur3
+ selected true
+ xpos -1712
+ ypos 155
+}
+ShuffleCopy {
+ inputs 2
+ name ShuffleCopy1
+ selected true
+ xpos -1577
+ ypos 160
+}
+Premult {
+ name Premult4
+ selected true
+ xpos -1577
+ ypos 189
+}
+push $N69afb400
+Merge2 {
+ inputs 2
+ name Merge5
+ selected true
+ xpos -1403
+ ypos 189
+}
+Dot {
+ name Dot9
+ selected true
+ xpos -1375
+ ypos 250
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy5
+ selected true
+ xpos -1274
+ ypos 248
+}
+Premult {
+ name Premult5
+ selected true
+ xpos -1274
+ ypos 282
+}
