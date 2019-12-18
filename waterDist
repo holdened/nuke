@@ -6,63 +6,63 @@ Noise {
  gamma 0.082
  scale {0.5 0.02}
  center {1056 659}
- name water_dist_spec
+ name water_dist_spec1
  selected true
- xpos -1581
- ypos 576
+ xpos -1020
+ ypos 616
 }
 Reformat {
  inputs 0
- name Reformat3
+ name Reformat4
  selected true
- xpos -1584
- ypos 425
+ xpos -1023
+ ypos 465
 }
 Noise {
  zoffset {{frame/15}}
  scale {0.5 0.02}
  center {1056 659}
- name water_dist
+ name water_dist1
  selected true
- xpos -1584
- ypos 449
+ xpos -1023
+ ypos 489
 }
 Dot {
- name Dot2
+ name Dot3
  selected true
- xpos -1556
- ypos 497
+ xpos -995
+ ypos 526
 }
 push $cut_paste_input
 Dot {
- name Dot1
+ name Dot4
  selected true
- xpos -1384
- ypos 353
+ xpos -823
+ ypos 393
 }
 Reformat {
- name Reformat2
+ name Reformat7
  selected true
- xpos -1412
- ypos 391
+ xpos -851
+ ypos 431
 }
 Transform {
  scale {1 -0.8}
  center {998 571}
- name Transform4
+ name Transform5
  selected true
- xpos -1412
- ypos 415
+ xpos -851
+ ypos 455
 }
 DirBlurWrapper {
  BlurType linear
  BlurCenter {992 454}
  BlurLength 100
  BlurAngle 180
- name DirBlurWrapper1
+ name DirBlurWrapper2
  selected true
- xpos -1412
- ypos 439
+ xpos -851
+ ypos 479
 }
 add_layer {waterDist waterDist.u waterDist.v}
 Copy {
@@ -71,25 +71,25 @@ Copy {
  to0 waterDist.u
  from1 rgba.green
  to1 waterDist.v
- name Copy1
+ name Copy2
  selected true
- xpos -1412
- ypos 489
+ xpos -851
+ ypos 529
 }
 IDistort {
  uv waterDist
  uv_offset 0.2
  uv_scale 25
- name IDistort1
+ name IDistort2
  selected true
- xpos -1412
- ypos 535
+ xpos -851
+ ypos 575
 }
 Grade {
  inputs 1+1
  white 5
- name Grade2
+ name Grade3
  selected true
- xpos -1407
- ypos 576
+ xpos -846
+ ypos 616
 }
