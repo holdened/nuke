@@ -1,0 +1,198 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+BackdropNode {
+ inputs 0
+ name "DISTORT TO RADIAL"
+ tile_color 0x87854701
+ gl_color 0x87854701
+ label "DISTORT TO RADIAL"
+ note_font "Arial Black"
+ note_font_size 20
+ selected true
+ xpos 391
+ ypos -293
+ bdwidth 200
+ bdheight 126
+}
+BackdropNode {
+ inputs 0
+ name "FADE PERIMITER"
+ tile_color 0x87854701
+ gl_color 0x87854701
+ label "FADE PERIMITER"
+ note_font "Arial Black"
+ note_font_size 20
+ selected true
+ xpos 416
+ ypos -84
+ bdwidth 310
+ bdheight 150
+}
+BackdropNode {
+ inputs 0
+ name FINAL
+ tile_color 0x87854701
+ gl_color 0x87854701
+ label FINAL
+ note_font "Arial Black"
+ note_font_size 20
+ selected true
+ xpos 420
+ ypos 360
+ bdwidth 200
+ bdheight 166
+}
+BackdropNode {
+ inputs 0
+ name "LINE GENERATION"
+ tile_color 0x87854701
+ gl_color 0x87854701
+ label "LINE GENERATION"
+ note_font "Arial Black"
+ note_font_size 20
+ selected true
+ xpos 377
+ ypos -511
+ bdwidth 200
+ bdheight 150
+}
+BackdropNode {
+ inputs 0
+ name OBSCURE
+ tile_color 0x87854701
+ gl_color 0x87854701
+ label OBSCURE
+ note_font "Arial Black"
+ note_font_size 20
+ selected true
+ xpos 420
+ ypos 146
+ bdwidth 200
+ bdheight 126
+}
+StickyNote {
+ inputs 0
+ name StickyNote5
+ label "This generates a bunch of black and white horizontal lines. \nBy animating the translate value, they move vertically. \n"
+ selected true
+ xpos 356
+ ypos -562
+}
+StickyNote {
+ inputs 0
+ name StickyNote6
+ label "This distorts the vertically moving horizontal lines to radial lines moving outwards. "
+ selected true
+ xpos 286
+ ypos -320
+}
+StickyNote {
+ inputs 0
+ name StickyNote7
+ label "This fades the lines at the edge. "
+ selected true
+ xpos 410
+ ypos -113
+}
+StickyNote {
+ inputs 0
+ name StickyNote8
+ label "The reaesons for this are onscure, which I will go over in class. "
+ selected true
+ xpos 419
+ ypos 112
+}
+StickyNote {
+ inputs 0
+ name StickyNote9
+ label "Here the emboss is added, and some color correct. "
+ selected true
+ xpos 377
+ ypos 329
+}
+Reformat {
+ inputs 0
+ format "512 512 0 0 512 512 1 square_512"
+ name Reformat6
+ selected true
+ xpos 550
+}
+Radial {
+ area {4 6 504 506}
+ softness 0.43
+ name Radial1
+ selected true
+ xpos 550
+ ypos 28
+}
+push $cut_paste_input
+Reformat {
+ format "512 512 0 0 512 512 1 square_512"
+ name Reformat5
+ selected true
+ xpos 440
+ ypos -437
+}
+Grid {
+ number {0 10}
+ size 39
+ translate {0 {curve x1 1.403741328 l x70 -257.2636108}}
+ name Grid1
+ selected true
+ xpos 440
+ ypos -403
+}
+SphericalTransform {
+ input "Lat Long map"
+ rx 90
+ output "Mirror Ball"
+ format "512 512 0 0 512 512 1 square_512"
+ fix true
+ name SphericalTransform1
+ selected true
+ xpos 440
+ ypos -230
+}
+Add {
+ inputs 1+1
+ value 4
+ invert_mask true
+ name Add2
+ selected true
+ xpos 440
+ ypos 24
+}
+Clamp {
+ name Clamp1
+ selected true
+ xpos 440
+ ypos 226
+}
+Blur {
+ channels rgb
+ size 8.2
+ filter box
+ name Blur2
+ selected true
+ xpos 440
+ ypos 436
+}
+Emboss {
+ Angle 78
+ Width 2.4
+ name Emboss1
+ selected true
+ xpos 440
+ ypos 460
+}
+ColorCorrect {
+ shadows.gain 0.075
+ highlights.gain 4
+ lookup {shadow {curve x0.4556063414 1 s0 x0.5053317547 0 s0}
+   midtone {1-shadow-highlight}
+   highlight {curve x0.5226549506 0.005034267902 s0 x0.5796338916 1.005034268 s0}}
+ name ColorCorrect2
+ selected true
+ xpos 440
+ ypos 494
+}
