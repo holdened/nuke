@@ -1,0 +1,264 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+Read {
+ inputs 0
+ file_type exr
+ file D:/Work.nuke/Particles/exr/sparks.####.exr
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ last 100
+ origlast 100
+ origset true
+ name Read2
+ selected true
+ xpos 241
+ ypos 134
+}
+set Nd7d4ec00 [stack 0]
+TimeOffset {
+ time_offset -8
+ time ""
+ name TimeOffset1
+ selected true
+ xpos 382
+ ypos 223
+}
+push $Nd7d4ec00
+Grade {
+ whitepoint 0.43
+ white 1.7
+ gamma 0.725
+ name Grade2
+ selected true
+ xpos 241
+ ypos 216
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge2
+ selected true
+ xpos 253
+ ypos 280
+}
+Camera2 {
+ inputs 0
+ translate {0.3000000119 13.74131298 28.47878075}
+ rotate {-21.83782574 0 0}
+ focal 80
+ name Camera2
+ selected true
+ xpos 507
+ ypos -151
+}
+Constant {
+ inputs 0
+ channels rgb
+ color {0.9 0.485 0.31 0}
+ name Constant2
+ selected true
+ xpos -177
+ ypos -594
+}
+Sphere {
+ rows 5
+ columns 5
+ name Sphere1
+ selected true
+ xpos -177
+ ypos -508
+}
+push $cut_paste_input
+Card2 {
+ rotate {-90 0 0}
+ scaling {0.5 1 1}
+ control_points {3 3 3 6 
+
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0} 
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0} 
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0} 
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0} 
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0} 
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0} 
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0} 
+1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
+ name Card1
+ selected true
+ xpos -233
+ ypos -389
+}
+set Na5519400 [stack 0]
+push 0
+ParticleEmitter {
+ inputs 3
+ start_frame -20
+ rate 4
+ lifetime 45
+ velocity 0.1
+ name ParticleEmitter1
+ selected true
+ xpos -61
+ ypos -459
+}
+ParticleDrag {
+ drag 0.1
+ name ParticleDrag1
+ selected true
+ xpos -61
+ ypos -419
+}
+ParticleVortex {
+ parallel 0.002
+ tangential 0.02
+ radial 0.02
+ name ParticleVortex1
+ selected true
+ xpos -61
+ ypos -385
+}
+ParticleTurbulence {
+ strength {0.02 0.02 {strength.x}}
+ scale {5 5 5}
+ offset {{"frame / 100"} {offset.x} {offset.x}}
+ name ParticleTurbulence1
+ selected true
+ xpos -61
+ ypos -351
+}
+set Na5519800 [stack 0]
+ParticleCurve {
+ curves {r {}
+   g {}
+   b {}
+   a {}
+   size {curve 0.9952735901 s0 0.1305969954 s0}
+   mass {}}
+ affect_size true
+ name ParticleCurve2
+ selected true
+ xpos 303
+ ypos -327
+}
+Scene {
+ name Scene2
+ selected true
+ xpos 348
+ ypos -240
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ samples 5
+ shutter 1
+ shutteroffset centred
+ motion_vectors_type distance
+ name ScanlineRender2
+ selected true
+ xpos 349
+ ypos -96
+}
+Premult {
+ name Premult2
+ selected true
+ xpos 349
+ ypos -72
+}
+ColorCorrect {
+ saturation 0.046
+ gamma {1.8 1 1 1}
+ name ColorCorrect1
+ selected true
+ xpos 349
+ ypos -48
+}
+Blur {
+ size {5 500}
+ name Blur1
+ selected true
+ xpos 349
+ ypos -24
+}
+Camera2 {
+ inputs 0
+ translate {0.3000000119 13.74131298 28.47878075}
+ rotate {-21.83782574 0 0}
+ focal 80
+ name Camera1
+ selected true
+ xpos 74
+ ypos -129
+}
+push $Na5519800
+ParticleCurve {
+ curves {r {}
+   g {}
+   b {}
+   a {}
+   size {curve 0.05124378204 0.01}
+   mass {}}
+ affect_size true
+ name ParticleCurve1
+ selected true
+ xpos -61
+ ypos -317
+}
+push $Na5519400
+Scene {
+ inputs 2
+ name Scene1
+ selected true
+ xpos -51
+ ypos -242
+}
+Constant {
+ inputs 0
+ channels rgb
+ name Constant1
+ selected true
+ xpos -215
+ ypos -146
+}
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ samples 15
+ shutter 2
+ shutteroffset centred
+ motion_vectors_type distance
+ name ScanlineRender1
+ selected true
+ xpos -61
+ ypos -68
+}
+Premult {
+ name Premult1
+ selected true
+ xpos -61
+ ypos -44
+}
+Grade {
+ blackpoint 0.02
+ whitepoint 0.66
+ name Grade1
+ selected true
+ xpos -61
+ ypos -20
+}
+Glow2 {
+ tint {0.72 0.08 0.105 1}
+ tolerance 0.09
+ brightness 1.4
+ name Glow1
+ selected true
+ xpos -194
+ ypos 1
+}
+Merge2 {
+ inputs 2
+ mix 0.01
+ name Merge1
+ selected true
+ xpos 44
+ ypos 107
+}
