@@ -1,0 +1,93 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+Group {
+ name ColorDilate
+ selected true
+ xpos -343
+ ypos -186
+ addUserKnob {20 User l fColourDilate}
+ addUserKnob {14 blurGrain l "Blur Grain" t "Preblur the image to smooth out grain if necessary" R 0 100}
+ addUserKnob {14 growTexture l "Grow Texture" t "Expands the texture out from pure white pixels in the matte.  Values can go above 100." R 0 100}
+ growTexture 18
+ addUserKnob {14 shrinkMatte l "Shrink Matte" t "Adjusts the point from which the texture grows.  Values are not constrained to +-20." R -20 20}
+ shrinkMatte -2
+ addUserKnob {7 alphaToWhite l "Alpha To White" t "Lifts the alpha to white" R 0 0.99999}
+ alphaToWhite 0.1
+ addUserKnob {4 quality l Quality M {fast better best "" ""}}
+ quality better
+ addUserKnob {26 "" -STARTLINE T "             "}
+ addUserKnob {6 invertMatte l "Invert Matte" -STARTLINE}
+ invertMatte true
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos 1025
+  ypos 42
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos 1059
+  ypos 177
+ }
+set N1b3a29d0 [stack 0]
+ Dot {
+  name Dot2
+  xpos 949
+  ypos 177
+ }
+ Invert {
+  channels rgba
+  name Invert1
+  xpos 915
+  ypos 211
+ }
+push $N1b3a29d0
+ Switch {
+  inputs 2
+  which {{invertMatte i}}
+  name Switch1
+  xpos 1025
+  ypos 211
+ }
+ Grade {
+  channels alpha
+  whitepoint {{1-alphaToWhite i}}
+  white_clamp true
+  name Grade1
+  xpos 1025
+  ypos 258
+ }
+ Group {
+  name DilateErode_v04_3
+  tile_color 0xbf7e0bff
+  xpos 1025
+  ypos 314
+  addUserKnob {20 "" l User}
+  addUserKnob {41 channels T Copy1.channels}
+  addUserKnob {26 ""}
+  addUserKnob {41 size T DilateMaster.size}
+  addUserKnob {26 ""}
+  addUserKnob {41 maskChannelInput l mask -STARTLINE T Copy1.maskChannelInput}
+  addUserKnob {41 invert_mask l invert -STARTLINE T Copy1.invert_mask}
+  addUserKnob {41 mix T Copy1.mix}
+ }
+  Dilate {
+   inputs 0
+   size {{-shrinkMatte.w i} {-shrinkMatte.h i}}
+   name DilateMaster
+   label "Do Not Delets\n"
+   xpos -297
+   ypos -24
+  }
+  Input {
+   inputs 0
+   name Input1
+   xpos 37
+   ypos -138
+  }
+  Dot {
+   name Dot1
+ 
