@@ -1,0 +1,36 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+KeyChew {
+ name KeyChew1
+ note_font "Bitstream Vera Sans"
+ selected true
+ xpos 169
+ ypos -189
+}
+push $cut_paste_input
+EdgeWarp {
+ name EdgeWarp1
+ note_font "DejaVu Sans"
+ selected true
+ xpos -484
+ ypos -189
+}
+push $cut_paste_input
+ExponentialEdgeExtend {
+ name ExponentialEdgeExtend1
+ label "\[value scale]  - \[value which]"
+ selected true
+ xpos -166
+ ypos -190
+}
+push $cut_paste_input
+ExponentialFiller {
+ name ExponentialFiller1
+ label "\n"
+ selected true
+ xpos 3
+ ypos -187
+ channels all
+ alphaedge 0
+}
