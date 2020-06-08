@@ -1,0 +1,124 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+Group {
+ name EdgeExtender_UV1
+ tile_color 0xc00caff
+ selected true
+ xpos -1138
+ ypos -32
+ addUserKnob {20 User}
+ addUserKnob {14 Intensity R 0 100}
+ Intensity 10
+ addUserKnob {7 ErodeIncomingMatte l "Erode Incoming Alpha" R -100 100}
+ addUserKnob {7 Edge_Erode l "Width (erode)" R 0 50}
+ Edge_Erode 10
+ addUserKnob {7 Edge_blur l "Edge Blur" R 0 100}
+ Edge_blur 10
+ addUserKnob {4 Output M {"Edges Extended" "Edge Only" "Area Effected"}}
+ addUserKnob {6 InvertAlpha l "Pull Inward?" +STARTLINE}
+ addUserKnob {7 Pull_Inward_edge_blur l "Pull Inward Edge Blur" R -50 50}
+ Pull_Inward_edge_blur 10
+}
+ Input {
+  inputs 0
+  name InputINPUT
+  label Input
+  xpos 525
+  ypos 330
+ }
+ Dot {
+  name Dot43
+  xpos 559
+  ypos 391
+ }
+ Dot {
+  name Dot32
+  xpos 559
+  ypos 583
+ }
+set N1d0717a0 [stack 0]
+ Dot {
+  name Dot33
+  xpos 801
+  ypos 583
+ }
+set N1d076370 [stack 0]
+ Dot {
+  name Dot34
+  xpos 1211
+  ypos 583
+ }
+set N1d07aef0 [stack 0]
+ Remove {
+  operation keep
+  channels alpha
+  name Remove4
+  xpos 1177
+  ypos 640
+ }
+ FilterErode {
+  channels rgba
+  size {{parent.ErodeIncomingMatte}}
+  filter gaussian
+  name FilterErode7
+  xpos 1177
+  ypos 713
+ }
+set N1d0b6810 [stack 0]
+ Invert {
+  name Invert2
+  xpos 1086
+  ypos 781
+ }
+push $N1d0b6810
+ Switch {
+  inputs 2
+  which {{parent.InvertAlpha}}
+  name Switch2
+  xpos 1177
+  ypos 787
+ }
+push $N1d07aef0
+ Dot {
+  name Dot35
+  xpos 1446
+  ypos 583
+ }
+set N1d0498c0 [stack 0]
+ Remove {
+  name Remove1
+  xpos 1412
+  ypos 631
+ }
+ Reformat {
+  type "to box"
+  format "720 576 0 0 720 576 1.067 PAL_1"
+  box_width {{InputINPUT.format.w}}
+  box_height {{InputINPUT.format.t}}
+  box_fixed true
+  scale {1 1}
+  name Reformat1
+  xpos 1412
+  ypos 682
+ }
+set N1d057540 [stack 0]
+ Ramp {
+  p0 {-0.5 0}
+  p1 {{parent.Reformat1.box_width-0.5} 0}
+  color {1 0 0 1}
+  name Ramp1
+  xpos 1326
+  ypos 722
+ }
+push $N1d057540
+ Ramp {
+  p0 {0 -0.5}
+  p1 {0 {parent.Reformat1.box_height-0.5 i}}
+  color {0 1 0 1}
+  name Ramp2
+  xpos 1501
+  ypos 728
+ }
+ Merge2 {
+ 
