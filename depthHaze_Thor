@@ -1,0 +1,689 @@
+set cut_paste_input [stack 0]
+version 12.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode36
+ tile_color 0xb541f401
+ label "Depth haze Quick"
+ note_font_size 42
+ selected true
+ xpos -1212
+ ypos -513
+ bdwidth 238
+ bdheight 226
+}
+push $cut_paste_input
+Dot {
+ name Dot789
+ selected true
+ xpos -683
+ ypos -886
+}
+set Nb83f9400 [stack 0]
+Dot {
+ name Dot790
+ selected true
+ xpos -226
+ ypos -886
+}
+Shuffle {
+ in depth
+ name Shuffle107
+ label "\[knob this.in]"
+ selected true
+ xpos -254
+ ypos -777
+}
+Grade {
+ channels rgba
+ blackpoint -3000
+ whitepoint 515000
+ gamma 1.05
+ black_clamp false
+ name Grade268
+ label "\[if \{ \[value mix] != 1 \} \{ return \"mix: \[value mix]\"\} else \{ return \" \"\}]"
+ selected true
+ xpos -254
+ ypos -718
+}
+Border { name Border5
+ selected true
+ xpos -12028
+ ypos -2177
+ disable true
+ adj 400
+
+ xpos -469
+ ypos -1369
+ selected true
+ disable true
+
+ xpos -254
+ ypos -677
+ selected true
+ disable true
+}
+Blur {
+ size 250
+ name Blur43
+ selected true
+ xpos -254
+ ypos -616
+}
+push $Nb83f9400
+Dot {
+ name Dot786
+ selected true
+ xpos -683
+ ypos -492
+}
+set Nf75dc000 [stack 0]
+Border { name Border6
+ selected true
+ xpos -12289
+ ypos -1989
+ adj 400
+
+ xpos -730
+ ypos -1181
+ selected true
+ disable false
+
+ xpos -515
+ ypos -489
+ selected true
+ disable false
+}
+Group {
+ inputs 2
+ name DepthFlash6
+ help "author Marc Rienzo"
+ tile_color 0x8e704400
+ note_font_color 0xccc39400
+ selected true
+ xpos -254
+ ypos -489
+ addUserKnob {20 User}
+ addUserKnob {41 from0 l "depth input" T Copy2.from0}
+ addUserKnob {7 spread R 0 1000}
+ spread 900
+ addUserKnob {7 amount}
+ amount 0.6
+ addUserKnob {7 saturation R 0 2}
+ saturation 0.7
+ addUserKnob {26 ""}
+ addUserKnob {26 "" -STARTLINE T "The output is designed to Merge OVER comp, not added or screened! "}
+}
+ Input {
+  inputs 0
+  name depth
+  xpos -583
+  ypos -561
+  number 1
+ }
+ Input {
+  inputs 0
+  name bg
+  xpos -255
+  ypos -580
+ }
+set Nb83f9c00 [stack 0]
+ Blur {
+  channels rgb
+  size {{parent.spread}}
+  name Blur2
+  xpos -428
+  ypos -542
+ }
+set Nb83f9800 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.alpha
+  bbox A
+  name Copy2
+  xpos -500
+  ypos -478
+ }
+set Nb8433c00 [stack 0]
+ Saturation {
+  saturation {{parent.saturation}}
+  maskChannelInput -rgba.alpha
+  unpremult -rgba.alpha
+  name Saturation1
+  xpos -500
+  ypos -433
+ }
+ Premult {
+  name Premult2
+  xpos -500
+  ypos -354
+ }
+push $Nb83f9c00
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels rgba
+  name Copy1
+  xpos -269
+  ypos -333
+ }
+ Multiply {
+  channels rgba
+  value {{parent.amount}}
+  maskChannelInput -rgba.alpha
+  unpremult -rgba.alpha
+  name Multiply1
+  xpos -269
+  ypos -279
+ }
+ Output {
+  name Output1
+  xpos -288
+  ypos -144
+ }
+push $Nb8433c00
+ Viewer {
+  frame_range 1001-1121
+  colour_sample_bbox {0.5295109749 0.09190556407 0.5303541422 0.09274873883}
+  name Viewer1
+  xpos 42
+  ypos -335
+ }
+push $Nb83f9c00
+ B_WeightedBlur {  name B_WeightedBlur1
+  xpos -335
+  ypos -525
+  channels rgba
+  blurSize 3300
+  scale 0.53
+  cw 5.3
+  maskChannel none
+ 
+  xpos -335
+  ypos -525
+  selected false
+  disable false
+ 
+  xpos -335
+  ypos -525
+  selected false
+  disable false
+ }
+push $Nb83f9800
+ Switch {
+  inputs 2
+  name Switch1
+  xpos -367
+  ypos -478
+ }
+end_group
+Grade {
+ whitepoint 0.3
+ gamma 1.04
+ black_clamp false
+ name Grade272
+ tile_color 0xa1a1a1ff
+ label CONTRAST
+ selected true
+ xpos -254
+ ypos -409
+}
+Grade {
+ white {1.029999852 0.9999999404 0.9699998498 1}
+ gamma {0.9919424653 1.035971165 1.080000043 1}
+ maskChannelInput -rgba.alpha
+ name Grade273
+ tile_color 0xffff
+ label COLOR
+ selected true
+ xpos -254
+ ypos -362
+}
+Group {
+ name ContrastAdjust_v6_6
+ selected true
+ xpos -254
+ ypos -309
+ addUserKnob {20 "" l User}
+ addUserKnob {26 ""}
+ addUserKnob {26 "" l channels}
+ addUserKnob {6 red t red -STARTLINE}
+ red true
+ addUserKnob {6 green t green -STARTLINE}
+ green true
+ addUserKnob {6 blue t blue -STARTLINE}
+ blue true
+ addUserKnob {6 alpha t alpha -STARTLINE}
+ addUserKnob {26 "" l "contrast adjust"}
+ addUserKnob {19 pivot R -1 1}
+ pivot 0.05
+ addUserKnob {6 pivot_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {19 contrast R -4 4}
+ contrast 0.5
+ addUserKnob {6 contrast_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {4 encoding M {linear log}}
+ addUserKnob {26 "" l output}
+ addUserKnob {4 return M {contrastAdjust "min(contrastAdjust, original)" "max(contrastAdjust, original)"}}
+ addUserKnob {26 ""}
+ addUserKnob {6 premult l "(un)premultiply by alpha" -STARTLINE}
+ addUserKnob {41 maskChannel l mask T Keymix1.maskChannel}
+ addUserKnob {41 invertMask l invert T Keymix1.invertMask}
+ addUserKnob {41 which l mix T Dissolve1.which}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -102
+  ypos -490
+ }
+ Dot {
+  name Dot1
+  xpos -68
+  ypos -419
+ }
+set Nb846f000 [stack 0]
+ Dot {
+  name Dot4
+  xpos 266
+  ypos -419
+ }
+ Dot {
+  name Dot5
+  xpos 266
+  ypos 995
+ }
+set Nb846e800 [stack 0]
+ Invert {
+  name Invert1
+  xpos 79
+  ypos 991
+ }
+push $Nb846e800
+ Dot {
+  name Dot7
+  xpos 266
+  ypos 1095
+ }
+set Nb846e000 [stack 0]
+push $Nb846f000
+ Unpremult {
+  name Unpremult1
+  xpos -102
+  ypos -353
+  disable {{!parent.premult}}
+ }
+ Dot {
+  name Dot2
+  xpos -68
+  ypos -268
+ }
+set Nb8499800 [stack 0]
+ Dot {
+  name Dot6
+  xpos 91
+  ypos -269
+ }
+set Nb8499400 [stack 0]
+ Dot {
+  name Dot3
+  xpos 193
+  ypos -268
+ }
+ Dot {
+  name Dot8
+  xpos 193
+  ypos 477
+ }
+set Nb8498c00 [stack 0]
+push $Nb8499400
+ Add {
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  value {{-parent.pivot.r i}}
+  name redAdd1
+  xpos 57
+  ypos -188
+  disable {{!parent.red}}
+ }
+ Add {
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  value {{-parent.pivot.g i}}
+  name greenAdd1
+  xpos 57
+  ypos -150
+  disable {{!parent.green}}
+ }
+ Add {
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  value {{-parent.pivot.b i}}
+  name blueAdd1
+  xpos 57
+  ypos -98
+  disable {{!parent.blue}}
+ }
+ Add {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  value {{-parent.pivot.a i}}
+  name alphaAdd1
+  xpos 55
+  ypos -28
+  disable {{!parent.alpha}}
+ }
+ Multiply {
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  value {{pow(2,parent.contrast.r) i}}
+  name redMult3
+  xpos 56
+  ypos 44
+  disable {{!parent.red}}
+ }
+ Multiply {
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  value {{pow(2,parent.contrast.g) i}}
+  name greenMult3
+  xpos 56
+  ypos 82
+  disable {{!parent.green}}
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  value {{pow(2,parent.contrast.b) i}}
+  name blueMult3
+  xpos 56
+  ypos 134
+  disable {{!parent.blue}}
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  value {{pow(2,parent.contrast.a) i}}
+  name alphaMult3
+  xpos 57
+  ypos 202
+  disable {{!parent.alpha}}
+ }
+ Add {
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  value {{parent.pivot.r i}}
+  name redAdd2
+  xpos 57
+  ypos 269
+  disable {{!parent.red}}
+ }
+ Add {
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  value {{parent.pivot.g i}}
+  name greenAdd2
+  xpos 57
+  ypos 321
+  disable {{!parent.green}}
+ }
+ Add {
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  value {{parent.pivot.b i}}
+  name blueAdd2
+  xpos 57
+  ypos 373
+  disable {{!parent.blue}}
+ }
+ Add {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  value {{parent.pivot.a i}}
+  name alphaAdd2
+  xpos 57
+  ypos 437
+  disable {{!parent.alpha}}
+ }
+push $Nb8499800
+ Multiply {
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  value {{1/parent.pivot.r i}}
+  name redMult1
+  label "\n\n"
+  xpos -102
+  ypos -222
+  disable {{!parent.red i}}
+ }
+ Multiply {
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  value {{1/parent.pivot.g i}}
+  name greenMult1
+  xpos -102
+  ypos -168
+  disable {{!parent.green i}}
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  value {{1/parent.pivot.b i}}
+  name blueMult1
+  xpos -102
+  ypos -116
+  disable {{!parent.blue i}}
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  value {{1/parent.pivot.a i}}
+  name alphaMult
+  xpos -102
+  ypos -53
+  disable {{!parent.alpha i}}
+ }
+ Gamma {
+  channels {rgba.red -rgba.green -rgba.blue none}
+  value {{1/pow(2,parent.contrast.r) i}}
+  name redGamma
+  xpos -102
+  ypos 20
+  disable {{!parent.red i}}
+ }
+ Gamma {
+  channels {-rgba.red rgba.green -rgba.blue none}
+  value {{1/pow(2,parent.contrast.g) i}}
+  name greenGamma
+  xpos -102
+  ypos 72
+  disable {{!parent.green i}}
+ }
+ Gamma {
+  channels {-rgba.red -rgba.green rgba.blue none}
+  value {{1/pow(2,parent.contrast.b) i}}
+  name blueGamma
+  xpos -102
+  ypos 124
+  disable {{!parent.blue i}}
+ }
+ Gamma {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  value {{1/pow(2,parent.contrast.a) i}}
+  name alphaGamma
+  xpos -102
+  ypos 202
+  disable {{!parent.alpha i}}
+ }
+ Multiply {
+  channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+  value {{parent.pivot.r i}}
+  name redMult2
+  label "\n\n"
+  xpos -102
+  ypos 290
+  disable {{!parent.red}}
+ }
+ Multiply {
+  channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+  value {{parent.pivot.g i}}
+  name greenMult2
+  xpos -102
+  ypos 344
+  disable {{!parent.green}}
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+  value {{parent.pivot.b i}}
+  name blueMult2
+  xpos -102
+  ypos 396
+  disable {{!parent.blue}}
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  value {{parent.pivot.a i}}
+  name alphaMult1
+  xpos -102
+  ypos 448
+  disable {{!parent.alpha}}
+ }
+ Switch {
+  inputs 2
+  which {{parent.encoding}}
+  name Switch2
+  xpos -102
+  ypos 542
+ }
+ Dot {
+  name Dot9
+  xpos -68
+  ypos 649
+ }
+set Nb06a2400 [stack 0]
+ Dot {
+  name Dot10
+  xpos 17
+  ypos 649
+ }
+set Nb06a2000 [stack 0]
+ Dot {
+  name Dot11
+  xpos 161
+  ypos 649
+ }
+ Merge {
+  inputs 2
+  operation max
+  name Max
+  xpos 159
+  ypos 693
+ }
+push $Nb8498c00
+push $Nb06a2000
+ Merge {
+  inputs 2
+  operation min
+  name Min
+  xpos 31
+  ypos 692
+ }
+push $Nb06a2400
+ Switch {
+  inputs 3
+  which {{parent.return}}
+  name Switch1
+  xpos -21
+  ypos 766
+ }
+ Premult {
+  name Premult1
+  xpos -21
+  ypos 854
+  disable {{!parent.premult}}
+ }
+ Keymix {
+  inputs 3
+  maskChannel none
+  name Keymix1
+  xpos -18
+  ypos 1084
+ }
+push $Nb846e000
+ Dissolve {
+  inputs 2
+  which 1
+  name Dissolve1
+  xpos -18
+  ypos 1148
+ }
+ Output {
+  name Output1
+  xpos -18
+  ypos 1334
+ }
+end_group
+Grade {
+ channels rgba
+ white 1.14
+ black_clamp false
+ name Grade316
+ selected true
+ xpos -254
+ ypos -263
+}
+Dot {
+ name Dot788
+ selected true
+ xpos -226
+ ypos -172
+}
+push $Nf75dc000
+Merge2 {
+ inputs 2
+ bbox B
+ name Merge347
+ selected true
+ xpos -711
+ ypos -169
+}
+push $cut_paste_input
+Dot {
+ name Dot212
+ selected true
+ xpos -1174
+ ypos -430
+}
+set Nb06f6c00 [stack 0]
+Shuffle {
+ in deep
+ green red
+ blue red
+ alpha red
+ name Shuffle20
+ label "\[value in] -> \[value out]"
+ selected true
+ xpos -1064
+ ypos -433
+}
+Expression {
+ expr0 isnan(r)?9000:r
+ name Expression1
+ selected true
+ xpos -1064
+ ypos -375
+}
+Grade {
+ channels rgba
+ whitepoint 15500
+ white_clamp true
+ name Grade33
+ selected true
+ xpos -1064
+ ypos -351
+}
+Dilate {
+ size 2
+ name Dilate6
+ selected true
+ xpos -1064
+ ypos -327
+ disable true
+}
+push $Nb06f6c00
+Grade {
+ inputs 1+1
+ channels rgba
+ black 0.075
+ black_clamp false
+ unpremult rgba.alpha
+ name Grade8
+ selected true
+ xpos -1202
+ ypos -327
+}
