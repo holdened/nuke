@@ -1,0 +1,103 @@
+set cut_paste_input [stack 0]
+version 12.1 v2
+push $cut_paste_input
+Group {
+ name ErodeSubPixel
+ tile_color 0xaa55ffff
+ selected true
+ xpos -381
+ ypos 27
+ addUserKnob {20 User}
+ addUserKnob {14 size R 0 100}
+ size {0.2 1.1}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 800
+  ypos 507
+ }
+ Dot {
+  name Dot83
+  xpos 834
+  ypos 581
+ }
+set Ndfd53000 [stack 0]
+ Dot {
+  name Dot85
+  xpos 951
+  ypos 581
+ }
+set Ndfd52c00 [stack 0]
+ Dilate {
+  size {{parent.size.w==parent.size.h?ceil(parent.size.h):0 i} {ceil(parent.size.h) i}}
+  name DilateHeightCeil
+  xpos 1032
+  ypos 630
+ }
+push $Ndfd52c00
+ Dilate {
+  size {{parent.size.w==parent.size.h?floor(parent.size.h):0 i} {floor(parent.size.h) i}}
+  name DilateHeightFloor
+  xpos 917
+  ypos 631
+ }
+ Dissolve {
+  inputs 2
+  which {{parent.size.h%1 i}}
+  name Dissolve1
+  xpos 920
+  ypos 756
+ }
+set Ndfd52000 [stack 0]
+push $Ndfd52000
+ Dot {
+  name Dot86
+  xpos 1085
+  ypos 766
+ }
+set Ndfd8bc00 [stack 0]
+ Dilate {
+  size {{ceil(parent.size.w)} 0}
+  name DilateWidthCeil
+  xpos 1167
+  ypos 833
+ }
+push $Ndfd8bc00
+ Dilate {
+  size {{floor(parent.size.w) i} 0}
+  name DilateWidthFloor
+  xpos 1051
+  ypos 834
+ }
+ Dissolve {
+  inputs 2
+  which {{parent.size.w%1}}
+  name Dissolve3
+  xpos 1051
+  ypos 920
+ }
+ Switch {
+  inputs 2
+  which {{parent.size.w==parent.size.h}}
+  name Switch2
+  xpos 920
+  ypos 1000
+ }
+push $Ndfd53000
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels all
+  maskChannelMask none
+  name Copy27
+  xpos 800
+  ypos 987
+ }
+ Output {
+  name Output1
+  xpos 800
+  ypos 1153
+ }
+end_group
