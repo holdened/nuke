@@ -1,9 +1,0 @@
-set cut_paste_input [stack 0]
-version 11.3 v5
-push $cut_paste_input
-EdgeExtendV2 {
- name EdgeExtendV2_1
- selected true
- xpos -1016
- ypos -573
-}
