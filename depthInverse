@@ -1,0 +1,11 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+Expression {
+ channel3 depth
+ expr3 "z > 0 ? 1/z : 0"
+ name depthInverse
+ selected true
+ xpos -1974
+ ypos 998
+}
