@@ -1,0 +1,353 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+Group {
+ name MS_EdgeDetect_v8
+ selected true
+ xpos -1731
+ ypos 462
+ addUserKnob {20 User}
+ addUserKnob {26 Crop}
+ addUserKnob {4 CropMethod l "Crop Method" M {Automatic Manual None}}
+ addUserKnob {41 format l "output format" -STARTLINE T CropReformat1.format}
+ addUserKnob {26 PreGrade l "Pre Grade"}
+ addUserKnob {41 blackpoint l "Pre Blacks" T Grade2.blackpoint}
+ addUserKnob {41 whitepoint l "Pre whites" T Grade2.whitepoint}
+ addUserKnob {41 white l "Pre gain" T Grade2.white}
+ addUserKnob {41 gamma_1 l "Pre gamma" T Grade2.gamma}
+ addUserKnob {20 SmoothTransition l "Smooth Transition" n 1}
+ SmoothTransition 0
+ addUserKnob {4 Method M {"Grade Method" "Smooth Method"}}
+ addUserKnob {7 SmoothMin l "Smooth Min"}
+ addUserKnob {7 SmoothMax l "Smooth Max"}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {41 offset T Offset_Dilate3.size}
+ addUserKnob {26 ""}
+ addUserKnob {41 outside T Dilate2.size}
+ addUserKnob {41 outsideblur T Blur2.size}
+ addUserKnob {7 outsidefade R -10 10}
+ outsidefade 1
+ addUserKnob {26 ""}
+ addUserKnob {41 inside T Dilate1.size}
+ addUserKnob {41 insideblur T Blur1.size}
+ addUserKnob {7 insidefade R -10 10}
+ insidefade 1
+ addUserKnob {26 ""}
+ addUserKnob {20 FreeTransform l "Free Transform" n 1}
+ FreeTransform 0
+ addUserKnob {6 Free_Transform l "Free Transform" +STARTLINE}
+ addUserKnob {41 translate T Free_Transform1.translate}
+ addUserKnob {41 scale T Free_Transform1.scale}
+ addUserKnob {41 center l "Pivot Center" T Free_Transform1.center}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {20 Emboss n 1}
+ Emboss 0
+ addUserKnob {6 Emboss_1 l Emboss +STARTLINE}
+ addUserKnob {7 Angle R 0 360}
+ Angle 180
+ addUserKnob {7 Size R 0 200}
+ Size 5
+ addUserKnob {20 endGroup_2 l endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {41 gamma l "Post gamma" T Grade1.gamma}
+ addUserKnob {41 gain l "Post gain" T Grade1.white}
+ addUserKnob {6 invert +STARTLINE}
+ addUserKnob {41 numpixels l AdjustBB T AdjBBox1.numpixels}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -16
+  ypos -515
+ }
+set N14519d90 [stack 0]
+ Dot {
+  name Dot5
+  xpos 177
+  ypos -514
+ }
+set N1702e5c0 [stack 0]
+ Dot {
+  name Dot10
+  xpos 296
+  ypos -514
+ }
+ Dot {
+  name Dot11
+  xpos 296
+  ypos -308
+ }
+push $N1702e5c0
+ Reformat {
+  resize none
+  name CropReformat1
+  xpos 146
+  ypos -435
+ }
+push $N14519d90
+ Reformat {
+  type "to box"
+  format "2880 1620 0 0 2880 1620 1 "
+  box_width {{input.width}}
+  box_height {{input.height}}
+  box_pixel_aspect {{"\[value \[input this 0].pixel_aspect]"}}
+  resize none
+  name Reformat2
+  xpos -16
+  ypos -441
+ }
+ Switch {
+  inputs 3
+  which {{CropMethod}}
+  name Switch4
+  label "\[value which]"
+  xpos -16
+  ypos -315
+ }
+ Dot {
+  name Dot9
+  xpos 15
+  ypos -187
+ }
+set N14519910 [stack 0]
+ Dot {
+  name Dot8
+  xpos -297
+  ypos -187
+ }
+ Dot {
+  name Dot7
+  xpos -297
+  ypos 663
+ }
+ AdjBBox {
+  name AdjBBox1
+  xpos -145
+  ypos 662
+ }
+push $N14519910
+ Expression {
+  expr0 smoothstep(SLow,SHigh,r)
+  expr1 smoothstep(SLow,SHigh,g)
+  expr2 smoothstep(SLow,SHigh,b)
+  expr3 smoothstep(SLow,SHigh,a)
+  name Expression1
+  xpos 107
+  ypos -127
+  addUserKnob {20 User}
+  addUserKnob {7 SLow}
+  SLow {{parent.SmoothMin}}
+  addUserKnob {7 SHigh}
+  SHigh {{parent.SmoothMax}}
+ }
+push $N14519910
+ Grade {
+  channels rgba
+  blackpoint 0.15
+  whitepoint 0.5
+  white_clamp true
+  name Grade2
+  label PreGrade
+  xpos -16
+  ypos -129
+ }
+ Switch {
+  inputs 2
+  which {{Method}}
+  name Switch2
+  label "\[value which]"
+  xpos -16
+  ypos -76
+ }
+ Dilate {
+  name Offset_Dilate3
+  xpos -16
+  ypos -21
+ }
+ Dot {
+  name Dot1
+  xpos 15
+  ypos 40
+ }
+set N146c4a30 [stack 0]
+ Dilate {
+  size 1
+  name Dilate2
+  label OUT
+  xpos -84
+  ypos 96
+ }
+ Blur {
+  size 1
+  name Blur2
+  label OUT
+  xpos -84
+  ypos 177
+ }
+ Gamma {
+  channels rgba
+  value {{parent.outsidefade}}
+  name Gamma2
+  xpos -84
+  ypos 263
+ }
+ Clamp {
+  name Clamp3
+  xpos -84
+  ypos 289
+ }
+ Dot {
+  name Dot3
+  xpos -53
+  ypos 611
+ }
+push $N146c4a30
+ Invert {
+  name Invert1
+  xpos 46
+  ypos 81
+ }
+ Dilate {
+  size 1
+  name Dilate1
+  label IN
+  xpos 46
+  ypos 132
+ }
+ Blur {
+  size 1
+  name Blur1
+  label IN
+  xpos 46
+  ypos 182
+ }
+ Gamma {
+  channels rgba
+  value {{parent.insidefade}}
+  name Gamma1
+  xpos 46
+  ypos 267
+ }
+ Clamp {
+  name Clamp2
+  xpos 46
+  ypos 293
+ }
+ Dot {
+  name Dot2
+  xpos 77
+  ypos 334
+ }
+set N10f74e80 [stack 0]
+ Dot {
+  name Dot4
+  xpos 367
+  ypos 334
+ }
+set N17090d70 [stack 0]
+ Dot {
+  name Dot15
+  xpos 469
+  ypos 334
+ }
+ Transform {
+  translate {{"(Size * sin (Angle* pi/180)) "} {"(Size * cos (Angle* pi/180)) "}}
+  center {960 540}
+  black_outside false
+  shutteroffset centred
+  name Transform1
+  xpos 438
+  ypos 469
+  addUserKnob {20 User}
+  addUserKnob {7 Angle R 0 360}
+  Angle {{parent.Angle}}
+  addUserKnob {7 Size R 0 200}
+  Size {{parent.Size}}
+ }
+ Dot {
+  name Dot14
+  xpos 469
+  ypos 549
+ }
+push $N17090d70
+ Transform {
+  center {1440 810}
+  black_outside false
+  name Free_Transform1
+  xpos 336
+  ypos 395
+ }
+ Dot {
+  name Dot6
+  xpos 367
+  ypos 505
+ }
+push $N10f74e80
+ Switch {
+  inputs 2
+  which {{parent.Free_Transform}}
+  name Switch3
+  xpos 45
+  ypos 504
+ }
+ Switch {
+  inputs 2
+  which {{parent.Emboss_1}}
+  name Switch5
+  xpos 45
+  ypos 548
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge1
+  xpos 45
+  ypos 608
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos 46
+  ypos 662
+ }
+ Grade {
+  channels all
+  name Grade1
+  xpos 46
+  ypos 778
+ }
+ Clamp {
+  name Clamp1
+  xpos 46
+  ypos 825
+ }
+set N1707a370 [stack 0]
+ Invert {
+  name Invert2
+  xpos -76
+  ypos 878
+ }
+push $N1707a370
+ Switch {
+  inputs 2
+  which {{parent.invert}}
+  name Switch1
+  xpos 46
+  ypos 922
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle1
+  xpos 46
+  ypos 989
+ }
+ Output {
+  name Output1
+  xpos 46
+  ypos 1064
+ }
+end_group
