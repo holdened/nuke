@@ -1,0 +1,2438 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+Group {
+ name EdgeWarpTools
+ tile_color 0xffb800ff
+ selected true
+ xpos -1726
+ ypos 599
+ addUserKnob {20 EWarpTool l "Edge Warp Tool"}
+ addUserKnob {26 Info l "" +STARTLINE T "Warp's the input image using the\nalpha from the source image or alpha input.\nGreat for treating sharp edges with fine detail."}
+ addUserKnob {26 ""}
+ addUserKnob {7 warp l "warp area" R 0 250}
+ warp 2
+ addUserKnob {7 warpin l "warp intensity"}
+ warpin 0.15
+ addUserKnob {4 warpIteration l "warp iteration" M {1 2 3 4 5 6 7 8 9 10}}
+ warpIteration 10
+ addUserKnob {7 warprotate l "warp rotation" R -180 180}
+ addUserKnob {26 ""}
+ addUserKnob {7 mluma l "mix luma"}
+ mluma 1
+ addUserKnob {7 mchroma l "mix chroma"}
+ mchroma 1
+ addUserKnob {4 oalpha l "output alpha" M {"source alpha" "warped alpha" "warp edge only" none}}
+ oalpha "warped alpha"
+ addUserKnob {6 preOut l "premult output" -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {26 author l "" +STARTLINE T "Jeff Baldemoro\njeffb@image-engine.com\nedge warp tools v3"}
+ addUserKnob {1 Scriplet_Info +DISABLED +INVISIBLE}
+ Scriplet_Info "user Toolsets EdgeWarpTools"
+}
+ Input {
+  inputs 0
+  name Input1
+  label Img
+  xpos -777
+  ypos 468
+ }
+ Dot {
+  name Dot1
+  xpos -743
+  ypos 574
+ }
+set N171d1510 [stack 0]
+ Dot {
+  name Dot13
+  xpos -743
+  ypos 1091
+ }
+set N172256b0 [stack 0]
+ Colorspace {
+  colorspace_out YCbCr
+  name Colorspace2
+  xpos -697
+  ypos 1087
+ }
+ Dot {
+  name Dot6
+  xpos -663
+  ypos 1180
+ }
+set N17368350 [stack 0]
+ Dot {
+  name Dot7
+  xpos -663
+  ypos 1262
+ }
+push $N17368350
+ Input {
+  inputs 0
+  name Alpha
+  label "\[value number]"
+  xpos -166
+  ypos 465
+  number 1
+ }
+ Dot {
+  name Dot3
+  xpos -132
+  ypos 656
+ }
+push $N171d1510
+ Dot {
+  name Dot2
+  xpos -474
+  ypos 574
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos -508
+  ypos 647
+  disable {{"!\[ exists parent.input1 ]"}}
+ }
+ Dot {
+  name Dot9
+  xpos -474
+  ypos 705
+ }
+set N171f1480 [stack 0]
+ Group {
+  name edgewarp_basic11
+  xpos -508
+  ypos 750
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N171ff8f0 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N1723dd00 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N171ff8f0
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 87
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 160
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 197
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -345
+   ypos 243
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N1732c360 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N1732c360
+   Viewer {
+    frame 1140
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N1723dd00
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N16f5c7b0 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N1470ded0 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N1470ded0
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N16f5c7b0
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic1
+  xpos -508
+  ypos 776
+  disable {{warpIteration<1 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N111cd090 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N16f7c120 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N111cd090
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17183cd0 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17183cd0
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N16f7c120
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N16ff04d0 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N16ff4fd0 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N16ff4fd0
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N16ff04d0
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic2
+  xpos -508
+  ypos 802
+  disable {{warpIteration<2 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N177bf380 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N177c3f00 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N177bf380
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17821730 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17821730
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N177c3f00
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17868890 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N1786d410 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N1786d410
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17868890
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic3
+  xpos -508
+  ypos 828
+  disable {{warpIteration<3 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N178dd3d0 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N178e1f50 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N178dd3d0
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N1793f780 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N1793f780
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N178e1f50
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17986920 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N1798b400 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N1798b400
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17986920
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic4
+  xpos -508
+  ypos 854
+  disable {{warpIteration<4 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N179fb3c0 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N179fff40 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N179fb3c0
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17a5d770 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17a5d770
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N179fff40
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17aa4990 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N17aa9470 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N17aa9470
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17aa4990
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic5
+  xpos -508
+  ypos 880
+  disable {{warpIteration<5 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N17b194c0 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N17b1dfb0 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N17b194c0
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17b7c8b0 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17b7c8b0
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N17b1dfb0
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17bc3a00 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N17bc8580 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N17bc8580
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17bc3a00
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic6
+  xpos -508
+  ypos 906
+  disable {{warpIteration<6 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N17c38550 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N17c3d0d0 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N17c38550
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17c9a900 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17c9a900
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N17c3d0d0
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17ce1ac0 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N17ce65a0 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N17ce65a0
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17ce1ac0
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic7
+  xpos -508
+  ypos 932
+  disable {{warpIteration<7 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N17d56570 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N17d5b0f0 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N17d56570
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17db8920 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17db8920
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N17d5b0f0
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17dffb20 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N17e04600 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N17e04600
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17dffb20
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic8
+  xpos -508
+  ypos 958
+  disable {{warpIteration<8 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N17e745f0 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N17e790e0 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N17e745f0
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17ed69e0 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17ed69e0
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N17e790e0
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N17f1db30 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N17f226b0 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N17f226b0
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N17f1db30
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Group {
+  name edgewarp_basic9
+  xpos -508
+  ypos 984
+  disable {{warpIteration<9 x1083 1}}
+  addUserKnob {20 EdgeWarp}
+  addUserKnob {26 ""}
+  addUserKnob {7 area l "warp area" R 0 250}
+  area {{parent.warp}}
+  addUserKnob {7 intensity l "warp intensity"}
+  intensity {{parent.warpin}}
+  addUserKnob {6 inCrop +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -305
+   ypos -331
+  }
+  Dot {
+   name Dot3
+   xpos -271
+   ypos -114
+  }
+set N17f92680 [stack 0]
+  Dot {
+   name Dot2
+   xpos -402
+   ypos -114
+  }
+set N17f97200 [stack 0]
+  Matrix {
+   channels alpha
+   matrix {
+       {3 0 -3}
+       {10 0 -10}
+       {3 0 -3}
+     }
+   name Scharr_operator_x
+   xpos -436
+   ypos 1
+  }
+push $N17f92680
+  Matrix {
+   channels alpha
+   matrix {
+       {3 10 3}
+       {0 0 0}
+       {-3 -10 -3}
+     }
+   name Scharr_operator_y
+   xpos -305
+   ypos -65
+  }
+  ShuffleCopy {
+   inputs 2
+   red alpha
+   green alpha2
+   blue black
+   alpha black
+   name ShuffleCopy2
+   xpos -305
+   ypos 6
+  }
+  Blur {
+   size {{"\[value parent.area]"}}
+   filter quadratic
+   name Blur
+   xpos -305
+   ypos 73
+  }
+  Crop {
+   box {0 0 {format.w} {format.h}}
+   name Crop1
+   xpos -305
+   ypos 161
+   disable {{parent.inCrop}}
+  }
+  Multiply {
+   value {{"\[python -execlocal blur\\ =\\ nuke.toNode(\\\"Blur\\\")\\\[\\\"size\\\"\\].value()\\nmult\\ =\\ nuke.thisParent()\\\[\\\"intensity\\\"\\].value()\\nif\\ blur\\ <=\\ 50:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ /\\ 2\\nelse:\\ #blur\\ <=\\ 100:\\n\\ ret\\ =\\ mult\\ *\\ blur\\ *\\ ((blur\\ -\\ 25)\\ /\\ 50)\\n]"}}
+   name Multiply
+   xpos -305
+   ypos 198
+  }
+  Group {
+   name Vectors_Rotation
+   help "Edit the direction of motion vectors"
+   selected true
+   xpos -305
+   ypos 250
+   addUserKnob {20 VecRot l "Vectors Rotation"}
+   addUserKnob {7 rotation t "Rotates the vectors direction" R -90 90}
+   rotation {{parent.parent.warprotate}}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos -303
+    ypos 144
+   }
+   Expression {
+    temp_name0 angleRad
+    temp_expr0 radians(parent.rotation)
+    expr0 "r * cos(angleRad) - g * sin(angleRad)"
+    expr1 "r * sin(angleRad) + g * cos(angleRad)"
+    name Direction
+    xpos -303
+    ypos 219
+   }
+set N17ff4a30 [stack 0]
+   Output {
+    name Output1
+    xpos -303
+    ypos 291
+   }
+push $N17ff4a30
+   Viewer {
+    frame_range 1001-1264
+    viewerProcess "Show_LUT_CDL (rec709)"
+    name Viewer1
+    selected true
+    xpos -89
+    ypos 177
+   }
+  end_group
+push $N17f97200
+  Dot {
+   name Dot1
+   xpos -512
+   ypos -114
+  }
+  Group {
+   inputs 2
+   name Group1
+   note_font "Bitstream Vera Sans"
+   xpos -546
+   ypos 250
+   mapsize {0.15 0.15}
+   addUserKnob {20 DisplaceX}
+   addUserKnob {26 ""}
+   addUserKnob {41 expr0 l "X displacement" T Displacement.expr0}
+   addUserKnob {41 expr1 l "Y displacement" T Displacement.expr1}
+  }
+   Input {
+    inputs 0
+    name ctrl
+    xpos 442
+    ypos -372
+    number 1
+   }
+   Input {
+    inputs 0
+    name src
+    xpos 237
+    ypos -275
+   }
+set N1803bbf0 [stack 0]
+   Merge2 {
+    inputs 2
+    operation copy
+    name Merge1
+    xpos 442
+    ypos -275
+   }
+set N180406d0 [stack 0]
+   Expression {
+    expr0 x-r
+    expr1 y+g
+    expr2 0
+    name Displacement
+    xpos 442
+    ypos -239
+   }
+push $N180406d0
+   Dot {
+    name Dot1
+    xpos 585
+    ypos -270
+   }
+   Expression {
+    expr0 0.5
+    expr1 0.5
+    name Expression1
+    xpos 552
+    ypos -204
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge2
+    xpos 442
+    ypos -204
+   }
+   Multiply {
+    value {{1.0/width} {"1.0 / height"} 1 1}
+    name Multiply1
+    xpos 442
+    ypos -119
+   }
+push $N1803bbf0
+   STMap {
+    inputs 2
+    uv rgb
+    name STMap2
+    xpos 237
+    ypos -119
+   }
+   Output {
+    name Output1
+    xpos 237
+    ypos -57
+   }
+  end_group
+  Output {
+   name Output1
+   xpos -546
+   ypos 640
+  }
+ end_group
+ Dot {
+  name Dot8
+  xpos -474
+  ypos 1041
+ }
+set N180a2320 [stack 0]
+ Colorspace {
+  colorspace_out YCbCr
+  name Colorspace1
+  xpos -508
+  ypos 1115
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  mix {{1-parent.mluma}}
+  name Copy2
+  xpos -508
+  ypos 1171
+  disable {{"!\[ exists parent.input0 ]"}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  from1 rgba.blue
+  to1 rgba.blue
+  mix {{1-parent.mchroma}}
+  name Copy3
+  xpos -508
+  ypos 1247
+  disable {{"!\[ exists parent.input0 ]"}}
+ }
+ Colorspace {
+  colorspace_in YCbCr
+  name Colorspace3
+  xpos -508
+  ypos 1335
+ }
+set N180dc0e0 [stack 0]
+push 0
+ Input {
+  inputs 0
+  name Mask
+  label "\[value number]"
+  xpos -140
+  ypos 2116
+  number 2
+ }
+push $N172256b0
+ Dot {
+  name Dot12
+  xpos -743
+  ypos 2125
+ }
+push $N171f1480
+ Dot {
+  name Dot10
+  xpos -166
+  ypos 705
+ }
+ Dot {
+  name Dot11
+  xpos -166
+  ypos 1041
+ }
+set N18102f50 [stack 0]
+push $N180a2320
+ ChannelMerge {
+  inputs 2
+  operation stencil
+  name ChannelMerge1
+  xpos -339
+  ypos 1026
+ }
+push $N180dc0e0
+ Dot {
+  name Dot5
+  xpos -474
+  ypos 1447
+ }
+set N18114e80 [stack 0]
+push $N18102f50
+ Dot {
+  name Dot4
+  xpos -166
+  ypos 1691
+ }
+ Switch {
+  inputs 3
+  which {{parent.oalpha}}
+  name AlphaSwitch
+  xpos -339
+  ypos 1687
+ }
+push $N18114e80
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy4
+  xpos -508
+  ypos 1837
+  disable {{"!\[ exists parent.input1 ]"}}
+ }
+ Shuffle {
+  alpha black
+  name Shuffle1
+  xpos -508
+  ypos 1873
+  disable {{parent.oalpha==3?0:1}}
+ }
+ Premult {
+  name Premult1
+  xpos -508
+  ypos 2034
+  disable {{1-parent.preOut}}
+ }
+ Keymix {
+  inputs 3
+  invertMask true
+  bbox B
+  name Keymix1
+  xpos -508
+  ypos 2116
+  disable {{"!\[exists parent.input2]"}}
+ }
+set N1814d450 [stack 0]
+ Viewer {
+  inputs 3
+  frame 1140
+  frame_range 1001-1264
+  viewerProcess "Show_LUT_CDL (rec709)"
+  name Viewer1
+  xpos 129
+  ypos 896
+ }
+push $N1814d450
+ Output {
+  name Output1
+  xpos -508
+  ypos 2223
+ }
+end_group
