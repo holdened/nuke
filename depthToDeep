@@ -1,0 +1,18 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+DeepToImage {
+ name DeepToImage1
+ selected true
+ xpos -1979
+ ypos 1120
+}
+Expression {
+ channel0 depth
+ expr0 depth.Z!=0?1/depth.Z:0
+ channel1 none
+ name deepToDepth
+ selected true
+ xpos -1979
+ ypos 1159
+}
