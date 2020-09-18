@@ -1,0 +1,156 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+Dot {
+ inputs 0
+ name Dot253
+ selected true
+ xpos -2178
+ ypos 1245
+}
+set N23060a20 [stack 0]
+Dot {
+ name Dot265
+ selected true
+ xpos -2068
+ ypos 1245
+}
+Blur {
+ size 4
+ name Blur19
+ selected true
+ xpos -2096
+ ypos 1289
+}
+Shuffle {
+ red black
+ green black
+ name Shuffle26
+ selected true
+ xpos -2096
+ ypos 1343
+}
+Dot {
+ name Dot264
+ selected true
+ xpos -2068
+ ypos 1389
+}
+push $cut_paste_input
+Dot {
+ name Dot254
+ selected true
+ xpos -1848
+ ypos 1245
+}
+set N243268a0 [stack 0]
+Dot {
+ name Dot268
+ selected true
+ xpos -1738
+ ypos 1245
+}
+Merge2 {
+ inputs 2
+ name Merge93
+ selected true
+ xpos -1766
+ ypos 1391
+}
+Dot {
+ name Dot270
+ selected true
+ xpos -1738
+ ypos 1563
+}
+push $N23060a20
+Dot {
+ name Dot266
+ selected true
+ xpos -2288
+ ypos 1245
+}
+Blur {
+ name Blur17
+ selected true
+ xpos -2316
+ ypos 1289
+}
+Shuffle {
+ green black
+ blue black
+ name Shuffle24
+ selected true
+ xpos -2316
+ ypos 1343
+}
+Dot {
+ name Dot262
+ selected true
+ xpos -2288
+ ypos 1437
+}
+push $N243268a0
+Dot {
+ name Dot267
+ selected true
+ xpos -1958
+ ypos 1245
+}
+Merge2 {
+ inputs 2
+ name Merge92
+ selected true
+ xpos -1986
+ ypos 1439
+}
+Dot {
+ name Dot269
+ selected true
+ xpos -1958
+ ypos 1491
+}
+push $N23060a20
+Blur {
+ name Blur20
+ selected true
+ xpos -2206
+ ypos 1289
+}
+Shuffle {
+ red black
+ blue black
+ name Shuffle25
+ selected true
+ xpos -2206
+ ypos 1343
+}
+Dot {
+ name Dot263
+ selected true
+ xpos -2178
+ ypos 1413
+}
+push $N243268a0
+Merge2 {
+ inputs 2
+ name Merge94
+ selected true
+ xpos -1876
+ ypos 1415
+}
+ShuffleCopy {
+ inputs 2
+ red red
+ name ShuffleCopy3
+ selected true
+ xpos -1876
+ ypos 1493
+}
+ShuffleCopy {
+ inputs 2
+ blue blue
+ name ShuffleCopy4
+ selected true
+ xpos -1876
+ ypos 1565
+}
