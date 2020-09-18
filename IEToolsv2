@@ -1,0 +1,678 @@
+set cut_paste_input [stack 0]
+version 11.3 v5
+push $cut_paste_input
+NoOp {
+ name ieExpressions
+ selected true
+ xpos -1860
+ ypos 855
+ addUserKnob {20 random l Random}
+ addUserKnob {7 randomResult l Result R 0 10}
+ randomResult {{"clamp((random((frame+randomSeed)*(randomSpeed/10))*randomAmplitude)+randomOffset, randomMinClamp, randomMaxClamp)"}}
+ addUserKnob {7 randomSpeed l Speed R 0 10}
+ randomSpeed 5
+ addUserKnob {7 randomAmplitude l Amplitude R 0 10}
+ randomAmplitude 1
+ addUserKnob {7 randomOffset l Offset R -10 10}
+ addUserKnob {7 randomMinClamp l MinClamp R -10 10}
+ randomMinClamp -10
+ addUserKnob {7 randomMaxClamp l MaxClamp R -10 10}
+ randomMaxClamp 10
+ addUserKnob {3 randomSeed l Seed}
+ randomSeed 555
+ addUserKnob {20 sinusWave l SinusWave}
+ addUserKnob {7 sinusResult l Result R 0 10}
+ sinusResult {{"clamp((sin((frame+sinusSeed)*(sinusSpeed/10))*sinusAmplitude)+sinusOffset, sinusMinClamp, sinusMaxClamp)"}}
+ addUserKnob {7 sinusSpeed l Speed R 0 10}
+ sinusSpeed 5
+ addUserKnob {7 sinusAmplitude l Amplitude R 0 10}
+ sinusAmplitude 1
+ addUserKnob {7 sinusOffset l Offset R -10 10}
+ addUserKnob {7 sinusMinClamp l MinClamp R -10 10}
+ sinusMinClamp -10
+ addUserKnob {7 sinusMaxClamp l MaxClamp R -10 10}
+ sinusMaxClamp 10
+ addUserKnob {3 sinusSeed l Seed}
+ sinusSeed 555
+ addUserKnob {20 sawTooth l Sawtooth}
+ addUserKnob {7 sawResult l Result R 0 10}
+ sawResult {{"clamp((((frame+sawTimeOffset)%sawInterval)*sawAmplitude)+sawOffset, sawMinClamp, sawMaxClamp)"}}
+ addUserKnob {7 sawInterval l Interval R 0 50}
+ sawInterval 10
+ addUserKnob {7 sawAmplitude l Amplitude R 0 10}
+ sawAmplitude 1
+ addUserKnob {7 sawOffset l Offset R -10 10}
+ addUserKnob {7 sawTimeOffset l TimeOffset R -100 100}
+ addUserKnob {7 sawMinClamp l MinClamp R -10 10}
+ sawMinClamp -10
+ addUserKnob {7 sawMaxClamp l MaxClamp R -10 10}
+ sawMaxClamp 10
+}
+Group {
+ inputs 0
+ name ImagePlane1
+ help "This node lets yuo project a texture onto a card to fit the frustum of the connected camera at the reference frame.\n\nThis is useful to either matchmove or stabilise a plate based on a camera rather than 2D tracking data.\n\n"
+ knobChanged "\nn = nuke.thisNode()\nk = nuke.thisKnob()\n\nif k.name() == 'use_input':\n    n\['knob'].setEnabled( not k.value() )\n"
+ note_font_size 22
+ selected true
+ xpos -1858
+ ypos 927
+ addUserKnob {20 "" l User}
+ addUserKnob {32 knob l "import chan file" t "when importing a chan file instead of hooking up a camera node, make sure to set the corrcet aperture in the CameraKnobs tab before importing the file!" -STARTLINE +DISABLED T "import_chan_button this.CAM_ANIM\nknob this.use_input 0"}
+ addUserKnob {6 use_input l "use input" t "if checked the camera hooked up to the cam pipe is used\ninstead of the internal one.\nIf unchecked, make sure to set the correct aperture in the CameraKnobs tab before importing the chan file!" -STARTLINE}
+ use_input true
+ addUserKnob {4 output t "stabilize - use this to stabilize a plate using the respective match moved camera\nmatch - track an element into the shot based on the camera input" M {stabilize match}}
+ output match
+ addUserKnob {3 ref l refFrame t "if the output format is the same as the plate you want to match/stabilize,\nthis will be the frame that will not be modified."}
+ ref 1
+ addUserKnob {7 distance t "the distance of the card to the camera.\nIf you have a nodal camera this isn't important\notherwise you need to adjust this to get the required parallax." R 1 10000}
+ distance 100
+ addUserKnob {26 "" l output}
+ addUserKnob {41 format T Card3D1.format}
+ addUserKnob {41 crop_1 l "black outside" +INVISIBLE T Card3D1.crop}
+ addUserKnob {6 crop -STARTLINE}
+ crop true
+ addUserKnob {41 full_format l "output format" +INVISIBLE T Card3D1.full_format}
+ addUserKnob {41 proxy_format l "proxy format" +INVISIBLE T Card3D1.proxy_format}
+ addUserKnob {41 filter T Card3D1.filter}
+ addUserKnob {20 "" l MotionBlur}
+ addUserKnob {41 motionblur T Card3D1.motionblur}
+ addUserKnob {41 shutter T Card3D1.shutter}
+ addUserKnob {41 shutteroffset l "shutter offset" T Card3D1.shutteroffset}
+ addUserKnob {41 shuttercustomoffset l "" -STARTLINE T Card3D1.shuttercustomoffset}
+ addUserKnob {20 "" l CameraKnobs}
+ addUserKnob {41 rot_order l "rotation order" T CAM_ANIM.rot_order}
+ addUserKnob {41 translate T CAM_ANIM.translate}
+ addUserKnob {41 rotate T CAM_ANIM.rotate}
+ addUserKnob {26 ""}
+ addUserKnob {41 focal l "focal length" T CAM_ANIM.focal}
+ addUserKnob {41 haperture l "horiz aperture" T CAM_ANIM.haperture}
+ addUserKnob {41 vaperture l "vert aperture" T CAM_ANIM.vaperture}
+ addUserKnob {41 win_scale l "window scale" T CAM_ANIM.win_scale}
+ addUserKnob {26 ""}
+ addUserKnob {41 label_1 l label T CAM_ANIM.label}
+}
+ Input {
+  inputs 0
+  name CAM
+  xpos -16
+  ypos 113
+  number 1
+ }
+ Camera {
+  inputs 0
+  display off
+  selectable false
+  haperture 9.58
+  vaperture 5.39
+  near 0.001
+  far {{parent.distance*2}}
+  name CAM_ANIM
+  xpos -136
+  ypos 41
+ }
+ Switch {
+  inputs 2
+  which {{parent.use_input}}
+  name Switch4
+  label "internal or connected camera"
+  xpos -16
+  ypos 54
+ }
+set N1b95cfa0 [stack 0]
+ Camera {
+  inputs 0
+  display off
+  selectable false
+  rot_order {{"\[topnode parent.input1].rot_order"}}
+  translate {{"\[topnode parent.input1].translate.x(parent.ref)"} {"\[topnode parent.input1].translate.y(parent.ref)"} {"\[topnode parent.input1].translate.z(parent.ref)"}}
+  rotate {{"\[topnode parent.input1].rotate.x(parent.ref)"} {"\[topnode parent.input1].rotate.y(parent.ref)"} {"\[topnode parent.input1].rotate.z(parent.ref)"}}
+  focal {{"\[topnode input1].focal.0"}}
+  haperture {{"\[topnode input1].haperture.0"}}
+  vaperture {{"\[topnode input1].vaperture.0"}}
+  near 0.0001
+  far {{parent.distance*2}}
+  win_scale {{"\[topnode input1].win_scale.0"} {"\[topnode input1].win_scale.1"}}
+  name CAM_STATIC1
+  tile_color 0x5682e700
+  gl_color 0x4851e400
+  label "connected cam\n"
+  xpos 28
+  ypos -178
+ }
+ Camera {
+  inputs 0
+  display off
+  selectable false
+  rot_order {{CAM_ANIM.rot_order}}
+  translate {{CAM_ANIM.translate.x(parent.ref)} {CAM_ANIM.translate.y(parent.ref)} {CAM_ANIM.translate.z(parent.ref)}}
+  rotate {{CAM_ANIM.rotate.x(parent.ref)} {CAM_ANIM.rotate.y(parent.ref)} {CAM_ANIM.rotate.z(parent.ref)}}
+  focal {{CAM_ANIM.focal.0}}
+  haperture {{CAM_ANIM.haperture.0}}
+  vaperture {{CAM_ANIM.vaperture.0}}
+  near 0.0001
+  far {{parent.distance*2}}
+  name CAM_STATIC
+  tile_color 0x5682e700
+  gl_color 0x4851e400
+  label "internal cam"
+  xpos -112
+  ypos -85
+ }
+ Switch {
+  inputs 2
+  which {{parent.use_input}}
+  name Switch5
+  label "internal or connected cam\n\[input this \[knob parent.use_input]]"
+  xpos 28
+  ypos -72
+ }
+set N111c11d0 [stack 0]
+ Switch {
+  inputs 2
+  which {{!parent.output}}
+  name Switch1
+  label "match or stabilize"
+  xpos 177
+  ypos -72
+ }
+push $N111c11d0
+push $N1b95cfa0
+ Switch {
+  inputs 2
+  which {{!parent.output}}
+  name Switch2
+  label "match or stabilize"
+  xpos 166
+  ypos 54
+ }
+ Input {
+  inputs 0
+  name IMG
+  xpos 409
+  ypos -97
+ }
+ Card3D {
+  inputs 3
+  scaling {{"\[input Switch5 \[value parent.use_input]].win_scale.0"} {"\[input Switch5 \[value parent.use_input]].win_scale.1"} 1}
+  uniform_scale {{parent.distance}}
+  pivot {0 0 1}
+  lens_in_focal {{"\[input Switch5 \[value parent.use_input]].focal"}}
+  lens_in_haperture {{"\[input Switch5 \[value parent.use_input]].haperture"}}
+  shutteroffset centred
+  name Card3D1
+  label internal
+  selected true
+  xpos 409
+  ypos 54
+ }
+ Crop {
+  box {0 0 {width} {height}}
+  intersect true
+  name Crop1
+  xpos 409
+  ypos 241
+  disable {{!parent.crop}}
+ }
+ Output {
+  name Output1
+  xpos 409
+  ypos 324
+ }
+end_group
+push $cut_paste_input
+add_layer {normal normal.x normal.y normal.z}
+add_layer {pos pos.x pos.y pos.z}
+Group {
+ name normalRelight1
+ tile_color 0x6effff
+ selected true
+ xpos -1861
+ ypos 1047
+ addUserKnob {20 User}
+ addUserKnob {41 use_alpha l "use alpha" T ReLight1.use_alpha}
+ addUserKnob {41 normal l "normal vectors" T ReLight1.normal}
+ addUserKnob {41 position l "point positions" T ReLight1.position}
+ addUserKnob {41 ambient T ReLight1.ambient}
+}
+ Input {
+  inputs 0
+  name beauty
+  xpos -643
+  ypos 528
+ }
+ Dot {
+  name Dot44
+  xpos -464
+  ypos 532
+ }
+set N1c8114f0 [stack 0]
+ Dot {
+  name Dot41
+  xpos -393
+  ypos 532
+ }
+ Input {
+  inputs 0
+  name normal
+  xpos -295
+  ypos 371
+  number 1
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy17
+  xpos -295
+  ypos 522
+ }
+set N1cd0b9f0 [stack 0]
+ Input {
+  inputs 0
+  name position
+  xpos -67
+  ypos 372
+  number 2
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy18
+  xpos -69
+  ypos 522
+ }
+ Unpremult {
+  name Unpremult17
+  xpos -69
+  ypos 560
+ }
+push $N1cd0b9f0
+ Unpremult {
+  name Unpremult16
+  xpos -297
+  ypos 559
+ }
+push $N1c8114f0
+ Dot {
+  name Dot43
+  xpos -464
+  ypos 613
+ }
+ Unpremult {
+  name Unpremult5
+  xpos -424
+  ypos 609
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  from1 rgba.red
+  to1 normal.x
+  from2 rgba.green
+  to2 normal.y
+  from3 rgba.blue
+  to3 normal.z
+  name Copy4
+  xpos -295
+  ypos 585
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  from1 rgba.red
+  to1 pos.x
+  from2 rgba.green
+  to2 pos.y
+  from3 rgba.blue
+  to3 pos.z
+  name Copy15
+  xpos -69
+  ypos 585
+ }
+set N187903d0 [stack 0]
+ Dot {
+  name Dot42
+  xpos -124
+  ypos 711
+ }
+ Input {
+  inputs 0
+  name camera
+  selected true
+  xpos -314
+  ypos 771
+  number 4
+ }
+ Input {
+  inputs 0
+  name light
+  xpos -271
+  ypos 834
+  number 3
+ }
+push $N187903d0
+ Dot {
+  name Dot40
+  xpos 37
+  ypos 713
+ }
+ ReLight {
+  inputs 4
+  use_alpha true
+  normal normal
+  position pos
+  name ReLight1
+  xpos -88
+  ypos 790
+ }
+ Premult {
+  name Premult3
+  xpos -88
+  ypos 867
+ }
+ Output {
+  name Output1
+  xpos -88
+  ypos 967
+ }
+end_group
+push $cut_paste_input
+Group {
+ name PrefProject1
+ selected true
+ xpos -1862
+ ypos 1133
+ addUserKnob {20 User}
+ addUserKnob {3 ProjFrame l "Projection Frame"}
+}
+ Input {
+  inputs 0
+  name projection_Image
+  xpos 441
+  ypos 215
+  number 1
+ }
+ Input {
+  inputs 0
+  name Pref
+  xpos 259
+  ypos 199
+ }
+set N1d98be20 [stack 0]
+ Shuffle {
+  red black
+  green black
+  blue black
+  alpha black
+  name Shuffle1
+  xpos 325
+  ypos 300
+ }
+ Merge2 {
+  inputs 2
+  bbox B
+  name Merge1
+  xpos 435
+  ypos 300
+ }
+push $N1d98be20
+ Dot {
+  name Dot2
+  xpos 293
+  ypos 265
+ }
+set N1d989470 [stack 0]
+ FrameHold {
+  first_frame {{parent.ProjFrame.main i}}
+  name FrameHold1
+  xpos 152
+  ypos 329
+ }
+push $N1d989470
+ ieSparseMapping {
+  inputs 3
+  name ieSparseMapping1_1
+  xpos 307
+  ypos 409
+ }
+ Output {
+  name Output1
+  xpos 307
+  ypos 509
+ }
+end_group
+push $cut_paste_input
+Group {
+ name pProjection2
+ help "Use this tool to project an input image using pWorld and Normals information."
+ selected true
+ xpos -1862
+ ypos 1208
+ addUserKnob {20 Controls}
+ addUserKnob {4 output M {"Projected Image" "UV map" "" ""}}
+ addUserKnob {26 ""}
+ addUserKnob {41 channels T pProjectionCore.channels}
+ addUserKnob {41 filter T pProjectionCore.filter}
+ addUserKnob {7 imageAspect l INVISIBLE t "Enter the aspect ratio of the source image being projected." +INVISIBLE R 0 3}
+ imageAspect {{width/height*pixel_aspect}}
+ addUserKnob {6 smooth l "smooth edges" t "Uses Bilateral blur to anti alias the matte to some extent.  Can be expensive." -STARTLINE +DISABLED +HIDDEN}
+}
+ BackdropNode {
+  inputs 0
+  name World2ProjectionCam
+  tile_color 0x444444ff
+  label "World to Projection Cam"
+  note_font_size 18
+  xpos -1085
+  ypos -193
+  bdwidth 190
+  bdheight 338
+ }
+ BackdropNode {
+  inputs 0
+  name pCan2UVs
+  tile_color 0x434343ff
+  label "pCam 2 UVs"
+  note_font_size 18
+  xpos -1087
+  ypos 167
+  bdwidth 195
+  bdheight 193
+ }
+ Input {
+  inputs 0
+  name position
+  label "\[value number]"
+  xpos -1043
+  ypos -489
+  number 1
+ }
+ Dot {
+  name Dot9
+  xpos -996
+  ypos -366
+ }
+ Expression {
+  channel0 alpha
+  expr0 r!=0&&g!=0&&b!=0?1:0
+  channel1 none
+  channel2 none
+  name AlphaEdgesFix
+  xpos -1030
+  ypos -137
+ }
+ Unpremult {
+  name Unpremult1
+  xpos -1030
+  ypos -106
+ }
+ Expression {
+  temp_name0 R
+  temp_expr0 Axis1.world_matrix.3
+  temp_name1 G
+  temp_expr1 Axis1.world_matrix.7
+  temp_name2 B
+  temp_expr2 Axis1.world_matrix.11
+  expr0 r-R
+  expr1 g-G
+  expr2 b-B
+  name World2CameraTranslation
+  label "translate Pworld to camera"
+  xpos -1030
+  ypos -82
+ }
+ ColorMatrix {
+  matrix {
+      {{Axis1.world_matrix.0} {Axis1.world_matrix.1} {Axis1.world_matrix.2}}
+      {{Axis1.world_matrix.4} {Axis1.world_matrix.5} {Axis1.world_matrix.6}}
+      {{Axis1.world_matrix.8} {Axis1.world_matrix.9} {Axis1.world_matrix.10}}
+    }
+  invert true
+  name World2CameraRotationP
+  label "Rotate to camera"
+  xpos -1030
+  ypos -40
+ }
+ Multiply {
+  channels {-rgba.red -rgba.green rgba.blue none}
+  value -1
+  name ReversePZ
+  xpos -1030
+  ypos 7
+ }
+ Clamp {
+  channels {-rgba.red -rgba.green rgba.blue none}
+  maximum_enable false
+  name ClampPZ
+  xpos -1030
+  ypos 43
+ }
+ Premult {
+  name Premult2
+  xpos -1030
+  ypos 98
+ }
+ NoOp {
+  name RealCameraCore
+  label "cam focal, aperture\nused to create UVs from pCam"
+  xpos -1030
+  ypos 216
+  addUserKnob {20 Controls}
+  addUserKnob {7 focal}
+  focal {{"\[\nif \{\[exists parent.input2]\} \{\n    return \[node this.parent.input2].focal\n\} else \{\nreturn 0\n\}\n]"}}
+  addUserKnob {7 h_apert}
+  h_apert {{"\[\nif \{\[exists parent.input2]\} \{\n    return \[node this.parent.input2].haperture\n\} else \{\nreturn 0\n\}\n]"}}
+  addUserKnob {7 v_apert}
+  v_apert {{"\[\nif \{\[exists parent.input2]\} \{\n    return \[node this.parent.input2].vaperture\n\} else \{\nreturn 0\n\}\n]"}}
+ }
+ Expression {
+  temp_name0 h_tan
+  temp_expr0 "(h_apert /2) / focal"
+  temp_name1 v_tan
+  temp_expr1 "(v_apert /2)  / focal"
+  expr0 "0.5 + 0.5 * r / h_tan / b"
+  expr1 "0.5 + 0.5 * g / v_tan / b"
+  expr2 0
+  name Expression16
+  label CameraUVs
+  xpos -1030
+  ypos 272
+  addUserKnob {20 "" l User}
+  addUserKnob {26 "" l "camera settings"}
+  addUserKnob {7 focal l "focal length" t "Link to projecting camera's focal length" R 0 100}
+  focal {{(RealCameraCore.v_apert*parent.imageAspect)/(RealCameraCore.h_apert/RealCameraCore.focal)}}
+  addUserKnob {7 h_apert l "horiz aperture" t "Link to projecting camera's horizontal aperture" R 0 50}
+  h_apert {{RealCameraCore.v_apert*parent.imageAspect}}
+  addUserKnob {7 v_apert l "vert aperture" t "Link to projecting camera's vertical aperture" R 0 50}
+  v_apert {{parent.RealCameraCore.v_apert}}
+ }
+ Expression {
+  expr3 "(r<0 || r>1 || g<0 || g>1)?0:a"
+  name Expression17
+  label "clamp projection to cam frustum"
+  xpos -1030
+  ypos 317
+ }
+ Premult {
+  name Premult3
+  xpos -1030
+  ypos 368
+ }
+ Dot {
+  name Dot1
+  xpos -996
+  ypos 450
+ }
+set N1c9ac320 [stack 0]
+ Dot {
+  name Dot28
+  xpos -996
+  ypos 546
+ }
+push $N1c9ac320
+ Input {
+  inputs 0
+  name img
+  label "\[value number]"
+  xpos -1360
+  ypos -518
+ }
+ Expression {
+  expr0 x/width
+  expr1 y/height
+  expr2 0
+  name Expression8
+  label UVs
+  xpos -1360
+  ypos -422
+  disable {{output>1?0:1}}
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  blur rgba.alpha
+  blur_scale 0
+  maskChannel rgba.alpha
+  premultiplied true
+  name pProjectionCore
+  xpos -1360
+  ypos 440
+ }
+ Switch {
+  inputs 2
+  which {{output}}
+  name OutputSTmapCore
+  selected true
+  xpos -1363
+  ypos 542
+ }
+ Output {
+  name Output1
+  xpos -1360
+  ypos 855
+ }
+ Input {
+  inputs 0
+  name cam
+  label "\[value number]"
+  xpos -1068
+  ypos -625
+  number 2
+ }
+ Axis2 {
+  name Axis1
+  xpos -1278
+  ypos -641
+ }
+ Viewer {
+  inputs 0
+  input_process false
+  name Viewer1
+  xpos -1030
+  ypos -226
+ }
+end_group
