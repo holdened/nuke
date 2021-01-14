@@ -1,0 +1,106 @@
+set cut_paste_input [stack 0]
+version 12.1 v2
+BackdropNode {
+ inputs 0
+ name Invert_stab
+ tile_color 0xaaaaaa00
+ label Invert_stab
+ note_font_size 32
+ selected true
+ xpos -2278
+ ypos -1676
+ bdheight 352
+}
+Dot {
+ inputs 0
+ name Dot10
+ selected true
+ xpos -1941
+ ypos -2041
+}
+set Nd08a1800 [stack 0]
+Dot {
+ name Dot11
+ selected true
+ xpos -1831
+ ypos -2041
+}
+Dot {
+ name Dot12
+ selected true
+ xpos -1831
+ ypos -1363
+}
+push $Nd08a1800
+FrameHold {
+ first_frame 1001
+ name FrameHold2
+ label "stabilize frame"
+ selected true
+ xpos -1969
+ ypos -1832
+}
+set N9b0ac580 [stack 0]
+Dot {
+ name Dot13
+ selected true
+ xpos -1941
+ ypos -1607
+}
+push $N9b0ac580
+push $Nd08a1800
+push $cut_paste_input
+NoOp {
+ name plate1
+ selected true
+ xpos -2272
+ ypos -2262
+}
+Project3D2 {
+ inputs 2
+ crop false
+ name Project3D2
+ selected true
+ xpos -2272
+ ypos -2038
+}
+NoOp {
+ name vcard
+ selected true
+ xpos -2272
+ ypos -1922
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender3
+ selected true
+ xpos -2272
+ ypos -1821
+}
+Project3D2 {
+ inputs 2
+ crop false
+ name Project3D3
+ selected true
+ xpos -2272
+ ypos -1604
+}
+NoOp {
+ name vcard2
+ selected true
+ xpos -2272
+ ypos -1498
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender4
+ selected true
+ xpos -2272
+ ypos -1360
+}
